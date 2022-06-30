@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <link href="/static/index/css/animate.css" rel="stylesheet">
+    <link href="/static/index/css/style.css" rel="stylesheet">
+    <script src="/static/index/js/wow.min.js" type="text/javascript"></script>
+    <script>
+        if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+            new WOW().init();
+        };
+    </script>
+</head>
+
+<body>
+<!-------------nav begin--------------------->
+{{ render "layouts/nav.html" }}
+<!---------------------nav  end---------------------->
+
+
+<div class="zp_banner">
+    <div class="deng slideInDown wow" data-wow-duration="1s"><img src="/static/index/img/deng.png"/></div>
+    <div class="shou slideInUp wow" data-wow-duration="1"><img src="/static/index/img/shou.png"></div>
+    <div class="zp_banner_p bounceInRight wow" data-wow-duration="1.2s"><p>携手一起去创造工程建设领域的信息化发展的美好明天</p></div>
+</div>
+
+
+<!----------------zp_banner  end--------------------------------->
+
+<div class="zp_content_big mb40">
+    <div class="zp_job pt25">
+        <div class="zp_job_left bounceInLeft wow" data-wow-duration="1.5s">
+            <ul>
+                <li><a href="zhaopin_subone.html" style="color:#00a1e9"><img src="/static/index/img/job.png"/>职位列表</a></li>
+                <li><a href="zhaopin_subtwo.html"><img src="/static/index/img/zplc.png"/>招聘流程</a></li>
+                <li><a href="zhaopin_subthree.html"><img src="/static/index/img/rili.png"/>行程安排</a></li>
+                <li><a href="#"><img src="/static/index/img/question.png"/>你问我答</a></li><div class="clear"></div>
+            </ul>
+        </div>
+        <div class="zp_job_right">
+            <h1 class="slideInDown wow" data-wow-duration="1s">Winform高级软件工程师</h1>
+            <h5>| 人才招聘</h5>
+            <div class="zp_condition mt15 mb20">
+                <span>工作职责：</span>
+                <ul>
+                    <li>1. 负责PC平台Winform的客户端软件开发，参与公司产品的研发及产品的维护；</li>
+                    <li>2. 参与架构设计和代码编写工作，准确实现产品需求，撰写相关技术文档等工作。</li>
+
+                </ul>
+            </div>
+
+            <div class="zp_condition mt15 mb20">
+                <span>能力要求：</span>
+                <ul>
+                    <li>1、大专及以上学历，计算机相关专业，有3年至5年实际开发经验；</li>
+                    <li>2、熟练WinForm/WPF、Windows服务开发，熟悉多线程技术，熟悉Telerik、DevExpress等控件的使用与开发；</li>
+                    <li>3、熟练Microsoft SQL Server的开发；</li>
+                    <li>4、精通多种设计模式,熟悉软件架构模式、概念和技巧;</li>
+                    <li>5、对数据采集有一定的经验者或熟悉WCF、Web Service、Delphi开发者优先；</li>
+                    <li>6、沟通能力强,责任心强,能够适应高强度的工作,具备团队合作精神;</li>
+
+                </ul>
+            </div>
+
+            <div class="zp_condition mt15 mb20">
+                <span>任职地点：</span>
+                <ul>
+                    <li>长沙</li>
+                </ul>
+            </div>
+
+            <div class="job_application"><a href="#">申请该职位</a></div>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!-----------------zp_content_big end--------------------------------->
+
+<!-------------footer begin--------------------->
+{{ render "layouts/foot.html" }}
+<!---------------------footer  end---------------------->
+</body>
+</html>

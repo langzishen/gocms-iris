@@ -1,0 +1,39 @@
+<input type="hidden" name="id" value="{{.info.Id}}">
+<div class="topjui-fluid">
+    <br>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">组名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="name" data-toggle="topjui-textbox" value="{{.info.Name}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">上级组</label>
+            <div class="topjui-input-block">
+                <input type="hidden" name="orgName">
+                <input type="text" name="pid" data-toggle="topjui-combotree"
+                       data-options="required:true,
+                       url:'/{{.RequestApp}}/role/zree?pid=0',
+                       expandUrl:'/{{.RequestApp}}/role/zree?pid={id}',
+                       param:'orgName:text'" value="{{.info.Pid}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'启用','value':1{{if eq .info.Status 1}},'selected':true{{end}}},{'text':'禁用','value':0{{if eq .info.Status 0}},'selected':true{{end}}}]">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">描述</label>
+            <div class="topjui-input-block">
+                <input type="text" name="remark" data-toggle="topjui-textbox" data-options="multiline:true" value="{{.info.Remark}}">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="keywords" content='{{.site_keywords}}'/>
+    <meta name="description" content='{{.site_description}}'/>
+    <!-- 浏览器标签图片 -->
+    <link rel="shortcut icon" href="/static/topjui/images/favicon.ico">
+    <title>{{.app_name}}</title>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css" href="/static/topjui/themes/default/topjui.smartness-blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <link type="text/css" href="/static/topjui/themes/default/sidemenu_style.css" rel="stylesheet" id="menuTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <script type="text/javascript">
+        var request_app = "{{.RequestApp}}";
+        if (window.location.pathname == "/"+request_app+"/index/index") myConfig.config.mainPage = true;
+    </script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" src="/static/static/public/js/common.js"></script>
+    <!-- EMIS系统首页资源文件（存放于system模块中）-->
+    <link type="text/css" href="/static/static/public/css/topjui.index.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/static/public/js/topjui.index.js" charset="utf-8"></script>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="/static/static/plugins/layui/layui.js"></script>
+    <style>
+        .moreBox {
+            text-align: center;
+            padding: 7px 0 5px;
+            width: 79px;
+            height: 54px;
+            margin: 0;
+            cursor: pointer;
+        }
+        .moreBox:hover + #moreMenu {
+            display: block;
+        }
+        #moreMenu {
+            position: fixed;
+            display: none;
+        }
+        #moreMenu:hover {
+            display: block;
+        }
+        #moreMenu ul {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+<!--遮罩层-->
+<div id="loading" class="loading-wrap">
+    <div class="loading-content">
+        <div class="loading-round"></div>
+        <div class="loading-dot"></div>
+    </div>
+</div>
+<div id="mm" class="submenubutton" style="width: 140px;display: none;">
+    <div id="mm-tabclose" name="6" iconCls="fa fa-refresh">刷新</div>
+    <div class="menu-sep"></div>
+    <div id="Div1" name="1" iconCls="fa fa-close">关闭</div>
+    <div id="mm-tabcloseother" name="3">关闭其他</div>
+    <div id="mm-tabcloseall" name="2">关闭全部</div>
+    <div class="menu-sep"></div>
+    <div id="mm-tabcloseright" name="4">关闭右侧标签</div>
+    <div id="mm-tabcloseleft" name="5">关闭左侧标签</div>
+    <div class="menu-sep"></div>
+    <div id="mm-newwindow" name="7">新窗口中打开</div>
+</div>
+
+<div data-toggle="topjui-layout" data-options="id:'index_layout',fit:true">
+    <div id="north" class="banner" data-options="region:'north',border:false,split:false" style="height: 50px; padding:0;margin:0; overflow: hidden;">
+        <div class="nav-bar">
+            <div class="nav-left webname">
+                <img class="admin-nav-logo" src="https://zysd-shanghai.oss-cn-shanghai.aliyuncs.com/emis/logo.png" alt="系统图标">
+                <span style="font-size: 15px" class="systemname">{{.app_name}}</span>
+            </div>
+            <div class="menu-collapse">
+                <span class="collapseMenu " style="text-align: center;cursor: pointer;font-size: 18px;">
+                    <span id="menuCollapseIcon" class="fa fa-outdent"></span>
+                </span>
+            </div>
+            <div class="nav-right">
+                <span style=" padding-right: 8px; height: 50px; line-height: 50px;">
+                    <!--<a href="javascript:void(0)" onclick="returnPublicity2()" data-toggle="topjui-menubutton" data-options="iconCls:'fa fa-power-off',hasDownArrow:false" style="color:#fff;">返回系统菜单</a>-->
+                    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="iconCls:'fa fa-user',hasDownArrow:false" style="color:#fff;">{{.authNickName}}</a>|
+                        <a href="javascript:void(0)" id="mb3" data-toggle="topjui-menubutton" data-options="menu:'#mm3',iconCls:'fa fa-cog',hasDownArrow:true" style="color:#fff;">设置</a>
+                        <div id="mm3" style="width:74px;">
+                            <div data-options="iconCls:'fa fa-info-circle'" onclick="javascript:personal(0)">个人信息</div>
+                            <div class="menu-sep"></div>
+                            <div data-options="iconCls:'fa fa-key'" onclick="javascript:modifyPwd(0)">修改密码</div>
+                            <div data-options="iconCls:'fa fa-key'" onclick="javascript:dingding(0)">绑定钉钉</div>
+                            <div data-options="iconCls:'fa fa-key'" onclick="javascript:weixin(0)">绑定微信</div>
+                        </div>|
+                        <a href="javascript:void(0)" id="mb2" data-toggle="topjui-menubutton" data-options="menu:'#mm2',iconCls:'fa fa-tree',hasDownArrow:true" style="color:#fff;">主题</a>|
+                        <div id="mm2" style="width:180px;">
+                            <div data-options="iconCls:'fa fa-star-o'">
+                                <span>现代风格</span>
+                                <div>
+                                    <div data-options="iconCls:'fa fa-tree blue'" onclick="changeTheme('smartness-blue')">默认主题</div>
+                                    <div data-options="iconCls:'fa fa-tree'" onclick="changeTheme('smartness-black')">现代黑色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree'" onclick="changeTheme('smartness-blacklight')">现代黑色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree red'" onclick="changeTheme('smartness-red')">现代红色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree red'" onclick="changeTheme('smartness-redlight')">现代红色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree green'" onclick="changeTheme('smartness-green')">现代绿色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree green'" onclick="changeTheme('smartness-greenlight')">现代绿色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree purple'" onclick="changeTheme('smartness-purple')">现代紫色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree purple'" onclick="changeTheme('smartness-purplelight')">现代紫色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree blue'" onclick="changeTheme('smartness-blue')">现代蓝色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree blue'" onclick="changeTheme('smartness-bluelight')">现代蓝色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree orange'" onclick="changeTheme('smartness-yellow')">现代橙色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree orange'" onclick="changeTheme('smartness-yellowlight')">现代橙色主题-亮</div>
+                                </div>
+                            </div>
+                            <div data-options="iconCls:'fa fa-star-o'">
+                                <span>经典风格</span>
+                                <div>
+                                    <div data-options="iconCls:'fa fa-tree'" onclick="changeTheme('classical-black')">经典黑色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree'" onclick="changeTheme('classical-blacklight')">经典黑色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree red'" onclick="changeTheme('classical-red')">经典红色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree red'" onclick="changeTheme('classical-redlight')">经典红色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree green'" onclick="changeTheme('classical-green')">经典绿色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree green'" onclick="changeTheme('classical-greenlight')">经典绿色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree purple'" onclick="changeTheme('classical-purple')">经典紫色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree purple'" onclick="changeTheme('classical-purplelight')">经典紫色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree blue'" onclick="changeTheme('classical-blue')">经典蓝色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree blue'" onclick="changeTheme('classical-bluelight')">经典蓝色主题-亮</div>
+                                    <div data-options="iconCls:'fa fa-tree orange'" onclick="changeTheme('classical-yellow')">经典橙色主题</div>
+                                    <div data-options="iconCls:'fa fa-tree orange'" onclick="changeTheme('classical-yellowlight')">经典橙色主题-亮</div>
+                                </div>
+                            </div>
+                        </div>
+                            <a href="javascript:void(0)" onclick="logout()" data-toggle="topjui-menubutton" data-options="iconCls:'fa fa-power-off',hasDownArrow:false" style="color:#fff;">退出</a>
+                    </span>
+            </div>
+            <div class="nav-center">
+                <a class="nav-btn nav-left-btn topmenu hide" href="#" style="float: left;"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+                <a class="nav-btn nav-right-btn topmenu hide" href="#" style="float: right;"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                <div style="overflow: hidden;position: relative;text-align: left;">
+                    <ul class="nav-group" style="font-size:0">
+                        <!--{{range $menu_key,$menu_val := .menuMap}}
+                        <li id="{{ $menu_key }}" title="TopJUI静态演示" style="" {{if eq $menu_key "content"}}class="topmenu selected"{{else}}class="topmenu"{{end}}>
+                        <a class="l-btn-text bannerMenu" href="javascript:void(0)">
+                            <p>
+                                <lable class="fa fa-{{ $menu_val.icons }}" style="color: #F7B824;"></lable>
+                            </p>
+                            <p><span style="white-space:nowrap;">{{ $menu_val.title }}</span></p>
+                        </a>
+                        </li>
+                        {{end}}-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="west" data-options="region:'west',split:true,width:240,border:false,headerCls:'border_right',bodyCls:'border_right'" title="" iconCls="fa fa-dashboard">
+        <div data-options="region:'north',title:'North Title',split:true" class="serchBox">
+            <input type="text" name="menuName" data-toggle="topjui-combobox" id="menuName" data-options="prompt:'输入菜单名称',editable:true,onChange:menuOnChange,onClick:menuOnClick,valueField:'url',textField:'text',url:'/{{.RequestApp}}/index/searchleftmenu',panelHeight:164">
+        </div>
+        <div id="RightAccordion" style="padding-top: 36px;"></div>
+    </div>
+
+    <div id="center" data-options="region:'center',border:false" style="overflow:hidden;">
+        <div id="index_tabs" style="width:100%;height:100%">
+            <div title="系统门户" iconCls="fa fa-home" data-options="border:true,content:&#39;&lt;iframe src=&quot;/{{.RequestApp}}/index/home&quot; scrolling=&quot;auto&quot; frameborder=&quot;0&quot; style=&quot;width:100%;height:100%;&quot;&gt;&lt;/iframe&gt;&#39;"></div>
+        </div>
+    </div>
+
+    <div data-options="region:'south',border:true" style="text-align:center;height:30px;line-height:30px;border-bottom:0;overflow:hidden;">
+        <span style="float:left;padding-left:5px;width:30%;text-align: left;">当前用户：<th>{{.authNickName}}</th></span>
+        <span style="padding-right:5px;width:40%">版权所有 © <span>2014-2022</span>  <span>{{.app_name}}</span> <a href="https://beian.miit.gov.cn" target="_blank">ICP备案:{{.app_icp}}</a></span>
+        <span style="float:right;padding-right:5px;width:30%;text-align: right;">版本：V{{.app_version}}</span>
+    </div>
+</div>
+
+<!--[if lte IE 8]>
+<div id="ie6-warning">
+    <p>您正在使用低版本浏览器，在本页面可能会导致部分功能无法使用，建议您升级到
+        <a href="http://www.microsoft.com/china/windows/internet-explorer/" target="_blank">IE9或以上版本的浏览器</a>
+        或使用<a href="http://se.360.cn/" target="_blank">360安全浏览器</a>的极速模式浏览
+    </p>
+</div>
+<![endif]-->
+
+<!--建立websocket链接（在确认启动消息中心的前提下，在系统基础配置中设置变量属性为true即可）-->
+<script src="/static/static/public/js/sockjs.min.js"></script>
+<script src="/static/static/public/js/stomp.min.js"></script>
+<script src="/static/static/public/js/websocketConnect.js"></script>
+
+<script src="https://g.alicdn.com/dingding/dinglogin/0.0.5/ddLogin.js"></script>
+</body>
+</html>
+
+<script>
+    $(function () {
+        navAdaptive()
+    })
+
+    $(window).resize(function () {
+        setTimeout(function () {
+            navAdaptive('resize')
+        }, 100)
+    });
+
+    function navAdaptive(resize) {
+        let navCenterWidth = Math.floor($(".nav-center>div").width() / 80)
+        let listHtml = ''
+        let moreHtml = ''
+        //let systemList = [{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":60,"pid":1,"state":"closed","iconCls":"fa fa-cog","text":"\u5E73\u53F0\u7BA1\u7406","url":"\/system\/portal\/index","isDel":0,"uuid":"186bf58083b211e68b50e4a471bb769f","roleId":34,"accessAuth":1,"sort":1,"ct":null,"iconClsColour":"","textColour":""},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":1820,"pid":1,"state":"closed","iconCls":"fa fa-diamond","text":"\u667A\u6167\u7164\u77FF","url":"","isDel":null,"uuid":"d3ebd8657d0311e9afab000c291327d0","roleId":34,"accessAuth":1,"sort":2,"ct":null,"iconClsColour":"","textColour":""},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":1806,"pid":1,"state":"closed","iconCls":"fa  fa-legal","text":"\u8D44\u4EA7\u62CD\u5356","url":"","isDel":null,"uuid":"1e6f83fb754e11e992b3000c291327d0","roleId":34,"accessAuth":1,"sort":3,"ct":null,"iconClsColour":"","textColour":""},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":1810,"pid":1,"state":"closed","iconCls":"fa  fa-graduation-cap","text":"\u5728\u7EBF\u6559\u80B2","url":"","isDel":null,"uuid":"3053bf12757611e992b3000c291327d0","roleId":34,"accessAuth":1,"sort":4,"ct":null,"iconClsColour":"","textColour":""},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":1813,"pid":1,"state":"closed","iconCls":"fa  fa-institution","text":"\u6559\u52A1\u7CFB\u7EDF","url":"","isDel":null,"uuid":"124a6438770d11e9a898000c291327d0","roleId":34,"accessAuth":1,"sort":5,"ct":null,"iconClsColour":"","textColour":""},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":3066,"pid":1,"state":"closed","iconCls":"fa  fa-user-o","text":"\u4EBA\u529B\u8D44\u6E90","url":"","isDel":null,"uuid":"9c1654dc39c311eb80ec000c291327d0","roleId":34,"accessAuth":1,"sort":7,"ct":null,"iconClsColour":"","textColour":""},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":1913,"pid":1,"state":"closed","iconCls":"fa fa-shopping-cart","text":"\u5206\u9500\u5546\u57CE","url":"","isDel":null,"uuid":"04b6664985ad11e9a963000c291327d0","roleId":34,"accessAuth":1,"sort":11,"ct":null,"iconClsColour":null,"textColour":null},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":1169,"pid":1,"state":"closed","iconCls":"fa fa-suitcase","text":"\u534F\u540C\u529E\u516C","url":"","isDel":0,"uuid":"186cb0c983b211e68b50e4a471bb769f","roleId":34,"accessAuth":1,"sort":21,"ct":null,"iconClsColour":null,"textColour":null},{"codeSetId":"menu","resourceType":"menu","levelId":1,"id":1203,"pid":1,"state":"closed","iconCls":"fa fa-dashboard","text":"\u7ECF\u8425\u7BA1\u7406","url":"","isDel":0,"uuid":"99d1a64a853211e6810fe4a471bb769f","roleId":34,"accessAuth":1,"sort":99,"ct":null,"iconClsColour":null,"textColour":null},{"codeSetId":"menu","resourceType":"urlNewWindows","levelId":1,"id":2383,"pid":1,"state":"open","iconCls":"fa fa-home","text":"\u5B98\u65B9\u7F51\u7AD9","url":"http:\/\/www.misboot.com","isDel":null,"uuid":"64537c0aeb1c11e98eea000c291327d0","roleId":34,"accessAuth":1,"sort":111,"ct":null,"iconClsColour":"#FF6347","textColour":""}]
+        let systemList = {{ .topmenujson }}
+        let list = []
+        let more = []
+        systemList.forEach(function (item, index) {
+            if(navCenterWidth<=1){
+                if (index>0) {
+                    more.push(item)
+                } else {
+                    list.push(item)
+                }
+            }else {
+                if (index >= (navCenterWidth - 1)) {
+                    more.push(item)
+                } else {
+                    list.push(item)
+                }
+            }
+
+        })
+        list.forEach(function (item) {
+            listHtml += "<li id='" + item.id + "' title='" + item.text + "' data-url='" + item.url + "' class='topmenu'>" +
+                "<input type='hidden' value='" + item.resourceType + "'>" +
+                "<div class='l-btn-text bannerMenu' href='javascript:void(0)'>" +
+                "<p><lable style='color:" + item.iconClsColour + "' class='" + item.iconCls + "'></lable></p>" +
+                "<p style='color:" + item.textColour + ";padding: 0 5px ;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>" + item.text + "</p></div></li>"
+        })
+        if (more.length > 0) {
+            more.forEach(function (item) {
+                moreHtml += "<li id='" + item.id + "' title='" + item.text + "' data-url='" + item.url + "' data-type='lastMenuSub' class='topmenu'>" +
+                    "<input type='hidden' value='" + item.resourceType + "'>" +
+                    "<div class='l-btn-text bannerMenu' href='javascript:void(0)'>" +
+                    "<p><lable style='color:" + item.iconClsColour + "' class='" + item.iconCls + "'></lable></p>" +
+                    "<p style='color:" + item.textColour + ";padding: 0 5px ;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;'>" + item.text + "</p></div></li>"
+            })
+            listHtml += "<li class='topmenu lastMenu' title='更多应用' data-type='lastMenu'>" +
+                "<div style='position: relative;'>" +
+                "<div class='l-btn-text bannerMenu moreBox'>" +
+                "<p><lable class='fa fa-th'></lable></p>" +
+                "<p>更多应用</p></div>" +
+                "<div id='moreMenu'><ul style='font-size:0'></ul></div></div></li>"
+        }
+
+        $(".nav-group").html(listHtml)
+        $("#moreMenu ul").html(moreHtml)
+        if(!resize){
+            $('.nav-group li').eq('0').trigger('click');
+        }
+
+
+        hideNavBtn()
+
+        $(".moreBox").mouseover(function () {
+            if ($("#moreMenu ul").height() > $("#index_tabs").height()) {
+                let first = $('#moreMenu ul li:first-child').width()
+                let last = $('#moreMenu ul li:last-child').width()
+
+                $("#moreMenu").css("width", first + last + 2)
+                $("#moreMenu ul").css("height", "calc(100vh - 84px)")
+                $("#moreMenu").css("transform", "translateX(-" + ($("#moreMenu").width() - 80) / 2 + "px)")
+            }
+        })
+
+        $("#moreMenu").css("transform", "translateX(-" + ($("#moreMenu").width() - 80) / 2 + "px)")
+    }
+</script>

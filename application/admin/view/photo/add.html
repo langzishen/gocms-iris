@@ -1,0 +1,48 @@
+<div class="topjui-fluid">
+    <br>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">图片标题</label>
+            <div class="topjui-input-block">
+                <input type="text" name="title" data-toggle="topjui-textbox" value="" data-options="required:true">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">所属分类</label>
+            <div class="topjui-input-block">
+                <input type="text" name="tid" data-toggle="topjui-combotreegrid" data-options="required:true,
+                    panelWidth:400,
+                    labelPosition:'top',
+                    url:'/{{.RequestApp}}/photo/zree?classpid=0',
+                    expandUrl:'/{{.RequestApp}}/photo/zree?classpid={classid}',
+                    idField:'classid',
+                    treeField:'classtitle',
+                    columns:[[
+                        {field:'classid',title:'UUID',width:20},
+                        {field:'classtitle',title:'分类名称',width:100}
+                    ]]">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">预览图片</label>
+            <div class="topjui-input-block">
+                <input type="text" name="img" data-toggle="topjui-uploadbox" data-options="editable:false,
+                   buttonText:'上传图片',
+                   accept:'images',
+                   uploadUrl:'/{{.RequestApp}}/photo/ajax_upload'">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'启用','value':1,'selected':true},{'text':'禁用','value':0}]">
+            </div>
+        </div>
+    </div>
+</div>

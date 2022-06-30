@@ -1,0 +1,109 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <link href="/static/index/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/index/css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/index/js/jQuery1.7.js"></script>
+    <script type="text/javascript" src="/static/index/js/bootstrap.min.js"></script>
+    <!---------新闻--------->
+    <script type="text/javascript" src="/static/index/js/jquery.flexslider-min.js"></script>
+    <script type="text/javascript" src="/static/index/js/index.js"></script>
+    <!--------新闻end------------------>
+</head>
+
+<body>
+<!-------------nav begin--------------------->
+{{ render "layouts/nav.html" }}
+<!---------------------nav  end---------------------->
+
+<div id="myCarousel" class="carousel slide">
+    <!-- 轮播（Carousel）指标 -->
+    <ol class="carousel-indicators">
+        {{range $banner_key_0,$banner_val_0 := .banner_list}}
+        <li data-target="#myCarousel" data-slide-to="{{$banner_key_0}}"{{if eq $banner_key_0 0}} class="active"{{end}}></li>
+        {{end}}
+    </ol>
+    <!-- 轮播（Carousel）项目 -->
+    <div class="carousel-inner">
+        {{range $banner_key,$banner_val := .banner_list}}
+        <div class="item{{if eq $banner_key 0}} active{{end}} banner0{{$banner_key}}">
+            <div class="banner_p"><a href="#"><img src="{{$banner_val.Img}}"></a></div>
+            <div class="item_banner01">
+                <h1>{{$banner_val.Title}}</h1><br>
+                <h2>{{$banner_val.Title}}</h2><br>
+            </div>
+        </div>
+        {{end}}
+    </div>
+    <!-- 轮播（Carousel）导航 -->
+    <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
+    <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
+</div> <!-----------------轮播   end------------------->
+
+
+
+<!--新闻资讯开始-->
+<div class="news_information">
+    <div class="center oh">
+        <div class="left oh">
+            <img src="/static/index/img/news_information.png" class="fl">
+            <a href="/index/article/index" id="maincontenttop_0_newsLink" class="pr c008">
+                新闻动态 <em></em>
+            </a>
+        </div>
+        <div id="maincontenttop_0_newsClass" class="right oh pcOnly">
+            <ul>
+                {{range $article_key,$article_val:=.article_list}}
+                <li>
+                    <a href="/index/article/info?id={{$article_val.Id}}"{{if gt $article_key 0}} class="m_hide"{{end}}>{{$article_val.Title}}</a>
+                </li>
+                {{end}}
+            </ul>
+            <ol ed_h="1" style="height: 33px;">
+                <li class="news_p_n news_p visibility_hidden">
+                    <img src="/static/index/img/index_lf_l.png" class="pa" ed_c="1" style="top: 7.5px; left: 14px;">
+                </li>
+                <li class="news_p_n news_n">
+                    <img src="/static/index/img/index_lf_r.png" class="pa" ed_c="1" style="top: 7.5px; left: 14.5px;">
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+<!--新闻资讯结束-->
+
+<div class="we_big mt20 mb40">
+    <div class="we_content">
+        <ul>
+            <li>
+                <div class="we_img"><img src="/static/index/img/we_01.png"></div>
+                <div class="mt10">
+                    <span>我们的故事</span>
+                    <p>拓东为交通、铁路、市政、水运等工程建设项目提供质量管控全面信息化解决方案以实现工程质量与成本、进度管控的和谐统一为理念，运用计算机、物联网、移动互联网、大数据分析、云计算等技术手段来实现客户轻松管控工程建设项目。</p>
+                </div>
+            </li>
+            <li class="ml15 mr15">
+                <div class="we_img"><img src="/static/index/img/we_02.png"></div>
+                <div class="mt10">
+                    <span>我们的团队</span>
+                    <p>我们的团队为百余家客户实现实验检测信息化服务。稳定、业务增长、质量管控、改善运营绩效、并优化检测业务流程。我们从不空谈理论，我们的方法是深入现场、真抓实干。</p>
+                </div>
+            </li>
+            <li>
+                <div class="we_img"><img src="/static/index/img/we_03.png"></div>
+                <div class="mt10">
+                    <span>我们的理念</span>
+                    <p>拓东公司自成立以来，坚持“勤奋务实、开拓创新”的企业精神，秉承“以人为本、技术领先、精益求精，追求完美”为立基之本。</p>
+                </div>
+            </li><div class="clear"></div>
+        </ul>
+    </div>
+</div>
+<!--------------------we_big end------------------------->
+
+<!-------------footer begin--------------------->
+{{ render "layouts/foot.html" }}
+<!---------------------footer  end---------------------->
+</body>
+</html>

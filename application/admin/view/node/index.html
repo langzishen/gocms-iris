@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css"  href="/static/topjui/themes/default/topjui.smartness-blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" src="/static/static/public/js/common.js"></script>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="/static/static/plugins/layui/layui.js"></script>
+</head>
+<body>
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'west',title:'大菜单',split:true,border:false,width:'20%',iconCls:'fa fa-book',headerCls:'border_right',bodyCls:'border_right'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'topMenu',
+                    url:'/{{.RequestApp}}/node/top_menu',
+                    childGrid:{
+                        param:'group_id:id',
+                        grid:[
+                            {type:'datagrid',id:'controllerMenu'}
+                        ]
+                    }">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'key'"></th>
+                <th data-options="field:'text',title:'菜单名称'"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div data-options="region:'center',iconCls:'fa fa-book',title:'控制器列表',width:'40%',split:true,border:false,bodyCls:'border_left'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'controllerMenu',
+                    idField:'id',
+                    reloadAfterSave:true,
+                    selectOnCheck:true,
+			        checkOnSelect:true,
+			        reloadAfterSave:true,
+                    url:'/{{.RequestApp}}/node/controller_list',
+                    saveUrl:'/system/dicItem/save?code={parent.code}',
+                    updateUrl:'/system/dicItem/update',
+                    destroyUrl:'/system/dicItem/delete',
+                    childGrid:{
+                        param:'controller_id:id',
+                        grid:[
+                            {type:'datagrid',id:'AtionMenu'}
+                        ]
+                    }">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'编号',checkbox:true"></th>
+                <th data-options="field:'name',title:'名称'"></th>
+                <th data-options="field:'text',title:'显示名'"></th>
+                <th data-options="field:'status',title:'状态',width:100,
+                    formatter: function(value,row,index){
+						if (value == 1){
+							return '<span style=\'color:green\'>启用</span>';
+						} else if (value == 0) {
+							return '<span style=\'color:red\'>禁用</span>';
+						} else {
+						    return '<span style=\'color:red\'>已删除</span>';
+						}
+                    }"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div data-options="region:'east',iconCls:'fa fa-book',title:'操作列表',width:'40%',split:true,border:false,bodyCls:'border_left'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'AtionMenu',
+                    idField:'id',
+                    reloadAfterSave:true,
+                    selectOnCheck:true,
+			        checkOnSelect:true,
+			        reloadAfterSave:true,
+                    url:'/{{.RequestApp}}/node/action_list',
+                    saveUrl:'/system/dicItem/save?code={parent.code}',
+                    updateUrl:'/system/dicItem/update',
+                    destroyUrl:'/system/dicItem/delete'">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'编号',checkbox:true"></th>
+                <th data-options="field:'name',title:'名称'"></th>
+                <th data-options="field:'text',title:'显示名'"></th>
+                <th data-options="field:'status',title:'状态',width:100,
+                    formatter: function(value,row,index){
+						if (value == 1){
+							return '<span style=\'color:green\'>启用</span>';
+						} else if (value == 0) {
+							return '<span style=\'color:red\'>禁用</span>';
+						} else {
+						    return '<span style=\'color:red\'>已删除</span>';
+						}
+                    }"></th>
+                <th data-options="field:'zone',title:'操作',formatter:operateFormatter"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div id="topMenu-toolbar" class="topjui-toolbar">
+
+</div>
+
+<div id="controllerMenu-toolbar" class="topjui-toolbar" data-options="
+       grid:{
+           type:'edatagrid',
+           id:'controllerMenu'
+       },parentGrid:{
+           type:'datagrid',
+           id:'topMenu'
+       }" style="display:none">
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#controllerMenu-toolbar',btnCls:'topjui-btn-green',iconCls:'fa fa-plus',
+            dialog:{
+               id:'controllerNodeAdd',
+               href:'/{{.RequestApp}}/node/controller_add?group_id={parent.id}',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/node/controller_add',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">新增</a>
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#controllerMenu-toolbar',btnCls:'topjui-btn-blue',iconCls:'fa fa-pencil',
+            dialog:{
+               id:'controllerNodeEdit',
+               href:'/{{.RequestApp}}/node/controller_edit?id={id}',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/node/controller_edit',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">修改</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+           extend:'#controllerMenu-toolbar',
+           btnCls:'topjui-btn-red',
+           iconCls:'fa fa-trash',
+           grid:{uncheckedMsg:'请先勾选要删除的行',param:'id:id'},
+           url:'/{{.RequestApp}}/node/del'">删除</a>
+</div>
+<div id="AtionMenu-toolbar" class="topjui-toolbar" data-options="
+       grid:{
+           type:'edatagrid',
+           id:'AtionMenu'
+       },parentGrid:{
+           type:'datagrid',
+           id:'controllerMenu'
+       }" style="display:none">
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#AtionMenu-toolbar',btnCls:'topjui-btn-green',iconCls:'fa fa-plus',
+           dialog:{
+               id:'actionNodeAdd',
+               href:'/{{.RequestApp}}/node/action_add?pid={parent.id}',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/node/action_add',iconCls:'fa fa-plus',handler:'ajaxForm',refresh:[{type:'edatagrid',id:'AtionMenu'}]}
+               ]
+           }">新增</a>
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#AtionMenu-toolbar',btnCls:'topjui-btn-blue',iconCls:'fa fa-pencil',
+            dialog:{
+               id:'actionNodeEdit',
+               href:'/{{.RequestApp}}/node/action_edit?id={id}',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/node/action_edit',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">修改</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+           extend:'#AtionMenu-toolbar',
+           btnCls:'topjui-btn-red',
+           iconCls:'fa fa-trash',
+           grid:{uncheckedMsg:'请先勾选要删除的行',param:'id:id'},
+           url:'/{{.RequestApp}}/node/del'">删除</a>
+</div>
+
+<script type="application/javascript">
+    function operateFormatter(value, row, index) {
+        var htmlstr = "";
+        htmlstr+=   '<button class="layui-btn layui-btn-xs layui-btn-warm" onclick="update(\'' + row.id + '\')">修改</button>';
+        // htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="remove(\'' + row.uuid + '\')">移除</button>';
+        // htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="deletes(\'' + row.uuid + '\')">删除</button>';
+        //htmlstr += '<button class="layui-btn layui-btn-xs" onclick="synchronization(\'' + row.uuid + '\')">同步数据库</button>';
+        return htmlstr;
+    }
+</script>
+</body>
+</html>

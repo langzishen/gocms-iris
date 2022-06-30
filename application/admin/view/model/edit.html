@@ -1,0 +1,36 @@
+<div class="topjui-fluid">
+    <input type="hidden" name="id" value="{{.info.Id}}">
+    <br>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">模型名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="ename" data-toggle="topjui-textbox" value="{{.info.Ename}}" data-options="required:true">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">显示名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="cname" data-toggle="topjui-textbox" value="{{.info.Cname}}" data-options="required:true">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">排序</label>
+            <div class="topjui-input-block">
+                <input type="text" name="sort" data-toggle="topjui-textbox" value="{{.info.Sort}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'启用','value':1{{if eq .info.Status 1}},'selected':true{{end}}},{'text':'禁用','value':0{{if eq .info.Status 0}},'selected':true{{end}}}]">
+            </div>
+        </div>
+    </div>
+</div>

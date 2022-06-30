@@ -1,0 +1,80 @@
+{
+  "app_name": "gocms",
+  "app_protocol": "http",
+  "app_url": "test.go.com",
+  "app_url_port": 8080,
+  "site_keywords": "gocms_keywords",
+  "site_description": "gogocms_description",
+  "app_author_email": "123270073@qq.com",
+  "offline_message": "本站正在维护中，暂不能访问。<br /> 请稍后再访问本站。",
+  "site_icp_num": "杭ICP备00000000号",
+  "app_version": "1.0_20220301",
+  "db": {
+    "host": "192.168.56.129",
+    "port": 3306,
+    "database": "gocms",
+    "user": "chenhc",
+    "password": "chenhc"
+  },
+  "upload": {
+    "file_upload_type": "Local",
+    "upload_type_config": {
+      "max_size": 104857600,
+      "root_path": "./static/uploads/",
+      "region_id": "cn-hangzhou",
+      "access_key_id": "abc",
+      "access_key_secret": "abc",
+      "bucket": "51idr",
+      "endpoint": "oss-cn-hangzhou.aliyuncs.com",
+      "request_uri": "http://xxx.oss-cn-hangzhou-internal.aliyuncs.com/",
+      "request_url": "http://xxx.oss-cn-hangzhou.aliyuncs.com/"
+    }
+  },
+  "admin": {
+    "menu": {
+      "content": {
+        "icons": "fa fa-cc-amex",
+        "title": "工作台"
+      },
+      "framework": {
+        "icons": "fa fa-sitemap",
+        "title": "组织架构"
+      },
+      "groupuser": {
+        "icons": "fa fa-users",
+        "title": "用户与组"
+      },
+      "developers": {
+        "icons": "fa fa-wrench",
+        "title": "开发者中心"
+      },
+      "system": {
+        "icons": "fa fa-cog",
+        "title": "系统管理"
+      },
+      "plugin": {
+        "icons": "fa fa-rocket",
+        "title": "插件管理"
+      }
+    }
+  },
+  "rbac": {
+    "table_access": "access",
+    "table_user": "user",
+    "table_role": "role",
+    "table_role_user": "role_user",
+    "table_node": "node",
+    "user_auth_type": 1,
+    "user_auth_key": "authId",
+    "admin_auth_key": "administrator",
+    "require_auth_controller": "all",
+    "no_auth_controller": "public,index",
+    "require_auth_action": "all",
+    "no_auth_action": "public-login,public-loginin,public-captcha,index-index,index-logout"
+  },
+  "data_access": {
+    "is_open": 0,
+    "controllers": "article,photo",
+    "table_field": "tid"
+  }
+}

@@ -1,0 +1,13 @@
+<div class="topjui-fluid">
+    <input type="hidden" name="role_id" value="{{.role_id}}">
+    <br>
+    <div class="topjui-row" >
+        {{range $role_user_key,$role_user_val := .role_user_list}}
+        <div class="topjui-col-sm4">
+            <div class="topjui-input-inline">
+                <input data-toggle="topjui-checkbox" name="user_id[]" value="{{$role_user_val.Id}}" label="{{$role_user_val.Nickname}}"{{if eq $role_user_val.IsChecked true}} checked{{end}}>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</div>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css"  href="/static/topjui/themes/default/topjui.smartness-blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" src="/static/static/public/js/common.js"></script>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="/static/static/plugins/layui/layui.js"></script>
+    <style>
+        .datagrid-row-selected {
+            color: #0092DC;
+        }
+        .topjui-input-block {
+            line-height: 30px;
+            color: black;
+        }
+
+        .breadcrumb {
+            padding: 8px 50px;
+            display: inline-block;
+            list-style: none;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .breadcrumb > li {
+            display: inline-block;
+        }
+
+        .breadcrumb > li + li:before {
+            padding: 0 5px;
+            color: #ccc;
+            content: "/\00a0";
+        }
+
+        .breadcrumb > .active {
+            color: #777;
+        }
+
+        .breadcrumb a {
+            color: #337ab7;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'center',iconCls:'icon-reload',title:'',split:true,border:false">
+        <table id="objectDg"></table>
+        <div id="objectDg-toolbar" class="topjui-toolbar" style="line-height: 30px" data-options=" grid:{type:'datagrid',id:'objectDg'}">
+            <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+               data-options="
+                   iconCls:'fa fa-cloud-upload',
+                   extend:'#objectDg-toolbar',
+                   btnCls:'topjui-btn-green',
+                   accept:'file',
+                   dialog:{
+                       title:'附件批量上传'
+                   },
+                   uploadUrl:'/{{.RequestApp}}/static/multiupload',
+                   onClick:multiUpload">批量上传</a>
+            <a href="javascript:void(0)"
+               data-toggle="topjui-menubutton"
+               data-options="
+                       btnCls:'topjui-btn-brown',
+                       iconCls:'fa fa-trash',
+                       onClick:delFile
+                      ">删除</a>
+            <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+               data-options="
+                       btnCls:'topjui-btn-blue',
+                       iconCls:'fa fa-plus',
+                       onClick:addCatalog
+                      ">新建目录</a>
+            <ol class="breadcrumb" id="navbar-folder">
+                <li class='active'><span class='fa fa-reply'></span> 返 回</li>
+            </ol>
+            <form id="queryForm" class="search-box">
+                <input type="text" name="search" data-toggle="topjui-textbox"
+                       data-options="id:'search',prompt:'输入文件名前缀匹配',width:200">
+                <a href="javascript:void(0)"
+                   data-toggle="topjui-menubutton"
+                   data-options="
+                           iconCls:'fa fa-search',
+                           btnCls:'topjui-btn-blue',
+                            onClick:searchOnclick
+                         ">查询</a>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    var columns = new Array();
+    columns[0] = [
+        {field: 'uuid', title: 'uuid', checkbox: true},
+        {field: 'objectName', title: '文件名（objectName）', width: 200, formatter: objectNameFormatter},
+        {
+            field: 'size', title: '大小', width: 100, formatter: function (value, row, index) {
+                return renderSize(value);
+            }
+        },
+        {field: 'updateTime', title: '更新时间', width: 100},
+        {
+            field: 'ext', title: '文件类型', width: 100, formatter: function (value, row, index) {
+                if (row.isFile) {
+                    return value;
+                }
+                return "";
+            }
+        },
+        {field: 'operation', title: '操作', width: 100, formatter: operationFormatter}
+    ];
+
+    $("#objectDg").iDatagrid({
+        pagination: false,
+        url: '/{{.RequestApp}}/{{.RequestController}}/list',
+        singleSelect: true,
+        fitColumns: true,
+        columns: columns,
+        onLoadSuccess: objectDgOnLoadSuccess
+    });
+
+    function renderSize(filesize) {
+        if (null == filesize || filesize == '') {
+            // return "0 Bytes";
+            return "";
+        }
+        var unitArr = new Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
+        var index = 0;
+        var srcsize = parseFloat(filesize);
+        index = Math.floor(Math.log(srcsize) / Math.log(1024));
+        var size = srcsize / Math.pow(1024, index);
+        size = size.toFixed(2);//保留的小数位数
+        return size + unitArr[index];
+    }
+
+    function objectNameFormatter(value, row, index) {
+        var html = "";
+        var valueArr = value.split("/");
+        if (row.isFile) {
+            html = "<span class='fa fa-file-text-o'></span> " + valueArr[valueArr.length - 1]
+        } else {
+            html = '<a  href="javascript:enterFolder(\'' + value + '\')">' + "<span class=\'fa  fa-folder-open\' style=\'color:#f7D876\'></span>" + valueArr[valueArr.length - 2] + '</a>';
+        }
+        return html;
+    }
+
+    /**
+     * @description 格式化操作按钮
+     * @param value
+     * @param row
+     * @param index
+     */
+    function operationFormatter(value, row, index) {
+        var html = "";
+        if (row.isFile) {
+            //html += '<button class="layui-btn layui-btn-xs" onclick="openSettingDialog(\'' + row.objectName + '\',\'' + row.endpoint + '\',\'' + row.bucketName + '\')" ><i class="fa fa-map-marker"></i> 详情</button>'
+            html += '<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="downloadFile(\'' + row.uuid + '\')" ><i class="fa fa-download"></i> 下载</button>'
+            html += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="delFile(\'' + row.uuid + '\')" ><i class="fa fa-trash"></i> 删除</button>'
+        } else {
+            // return '<button class="layui-btn layui-btn-xs  layui-btn-danger" ><i class="fa fa-trash"></i> 删除</button>'
+        }
+        return html;
+    }
+
+    function openSettingDialog(objectName, endpoint, bucketName) {
+
+        // 1. 创建form表单元素
+        var $myDialog = $('<form method="post"></form>');
+
+        // 2. 创建弹出窗口
+        $myDialog.iDialog({
+            id: 'myDialog',// 唯一标识id
+            title: '设置',// 标题
+            closed: false, // 关闭状态
+            height: 400, // 高度
+            width: 700, // 宽度
+            href: '/document/oss/edit?objectName=' + objectName + "&endpoint=" + endpoint + "&bucketName=" + bucketName, // 加载页面元素的地址
+            buttons: [
+                {text: '关闭', iconCls: 'fa fa-close', btnCls: 'topjui-btn-red', handler: closeMyDialog}//'自定义关闭'调用下面closeMyDialog方法
+            ]
+
+        });
+
+        function closeMyDialog() {
+            $myDialog.iDialog("destroy");
+        }
+
+    }
+
+    function delFile(uuid="") {
+        //1. 获取所有选中行
+        var rows = $("#objectDg").iDatagrid("getChecked");
+        if (!rows || rows.length == 0) {
+            return $.iMessager.alert('我的消息', '请勾选需要删除的记录！', 'messager-info');
+        }
+        var uuidArr = [];
+        for (var i = 0; i < rows.length; i++) {
+            uuidArr.push(rows[i].uuid);
+        }
+        if (uuid){
+            uuids = uuid
+        }else{
+            uuids = uuidArr.join(",")
+        }
+        $.post("/{{.RequestApp}}/{{.RequestController}}/delfile", {
+            uuids: uuids
+        }, function (res) {
+            if (res.statusCode == 200) {
+                $.iMessager.show({
+                    title: '我的消息',
+                    msg: '删除成功！',
+                    timeout: 5000,
+                    showType: 'slide'
+                });
+            } else {
+                $.iMessager.alert('我的消息', res.message ? res.message : '删除失败！', 'messager-info');
+            }
+            var options = $("#objectDg").iDatagrid("options");
+            var queryParams = options.queryParams;
+            $("#objectDg").iDatagrid("reload", $.extend(queryParams, {search: "", nextMarker: ""}))
+        }, "JSON");
+    }
+
+    function addCatalog() {
+        var options = $("#objectDg").iDatagrid("options"),
+            queryParams = options.queryParams,
+            keyPrefix = queryParams.keyPrefix;
+
+        // 1. 创建form表单元素
+        var $myDialog1 = $('<form method="post"></form>');
+
+        // 2. 创建弹出窗口
+        $myDialog1.iDialog({
+            id: 'myDialog1',// 唯一标识id
+            title: '创建目录',// 标题
+            closed: false, // 关闭状态
+            height: 320, // 高度
+            width: 520, // 宽度
+            href: '/{{.RequestApp}}/static/adddir', // 加载页面元素的地址
+            buttons: [
+                {text: '新建', iconCls: 'fa fa-plus', btnCls: 'topjui-btn-blue', handler: function () {
+                        $.messager.progress();	// 显示进度条
+                        $myDialog1.form('submit', {
+                            url: "/{{.RequestApp}}/static/doadddir",
+                            onSubmit: function(){
+                                var isValid = $(this).form('validate');
+                                if (!isValid){
+                                    $.messager.progress('close');	// 如果表单是无效的则隐藏进度条
+                                }
+                                return isValid;	// 返回false终止表单提交
+                            },
+                            success: function(){
+                                $.messager.progress('close');	// 如果提交成功则隐藏进度条
+                                closeMyDialog(); // 关闭弹框
+                                // 刷新文件
+                                var options = $("#objectDg").iDatagrid("options");
+                                var queryParams = options.queryParams;
+                                $("#objectDg").iDatagrid("reload", $.extend(queryParams, {search: "", nextMarker: ""}))
+                            }
+                        });
+                    }},//'自定义关闭'调用下面closeMyDialog方法
+                {text: '关闭', iconCls: 'fa fa-close', btnCls: 'topjui-btn-red', handler: closeMyDialog}//'自定义关闭'调用下面closeMyDialog方法
+            ],
+            onLoad:function () {
+                $myDialog1.form('load',{
+                    keyPrefix:keyPrefix
+                });
+            }
+
+        });
+
+        function closeMyDialog() {
+            $myDialog1.iDialog("destroy");
+        }
+
+    }
+
+    function enterFolder(value) {
+        value = value || "";
+        var options = $("#objectDg").iDatagrid("options");
+        var queryParams = options.queryParams;
+        $("#objectDg").iDatagrid("reload", $.extend(queryParams, {keyPrefix: value, nextMarker: null, search: ""}))
+    }
+
+    function objectDgOnLoadSuccess(data) {
+        var options = $("#objectDg").iDatagrid("options");
+        var queryParams = options.queryParams;
+        if (data.nextMarker != null && data.nextMarker != "") {
+            $.extend(queryParams, {nextMarker: data.nextMarker});
+        }
+        // 设置导航条
+
+        if (data.keyPrefix) {
+            var html = "<li><a href='javascript:enterFolder()'><span class='fa fa-reply'><span> 返 回 </a></li>";
+            var keyPrefixArr = data.keyPrefix.split('/');
+            var keyPrefix = "";
+            var index = "";
+            keyPrefixArr.length = keyPrefixArr.length - 1;
+            for (var i = 0; i < keyPrefixArr.length; i++) {
+                if (i == keyPrefixArr.length - 1) {
+                    html += "<li class=\"active\">" + keyPrefixArr[i] + "</li>";
+                } else {
+                    index = data.keyPrefix.indexOf(keyPrefixArr[i]);
+                    if (index != -1) {
+                        keyPrefix = data.keyPrefix.slice(0, index + keyPrefixArr[i].length + 1)
+                        html += '<li><a href="javascript:enterFolder(\'' + keyPrefix + '\')">' + keyPrefixArr[i] + '</a></li>'
+                    }
+                }
+            }
+            $('#back-btn').iMenubutton('enable');
+        } else {
+            var html = "<li class='active'><span class='fa fa-reply'><span> 返 回</li>";
+            $('#back-btn').iMenubutton('disable');
+        }
+        $("#navbar-folder").html(html);
+    }
+
+    function backNavbar() {
+        var data = $("#objectDg").iDatagrid("getData");
+        var keyPrefix = data.keyPrefix
+        var keyPrefixArr = keyPrefix.split('/');
+        var len = keyPrefixArr.length - 2;
+        keyPrefix = keyPrefix.slice(0, keyPrefix.indexOf(keyPrefixArr[len]));
+        enterFolder(keyPrefix);
+    }
+
+    function searchOnclick() {
+        var options = $("#objectDg").iDatagrid("options");
+        var queryParams = options.queryParams;
+        $("#objectDg").iDatagrid("reload", $.extend(queryParams, {search: $("#search").val(), nextMarker: ""}))
+    }
+
+    function downloadFile(uuid) {
+        location.href = "/{{.RequestApp}}/static/download?uuid=" + uuid;
+    }
+
+    var contents2 = $("#objectDg").parent().find(".datagrid-view2 .datagrid-body");
+
+    contents2.scroll(function (data) {
+        var data = $("#objectDg").iDatagrid("getData");
+        if (!data || !data.rows || data.rows.length == 0) {
+            return;
+        }
+        if (!data.nextMarker) {
+            return;
+        }
+
+        nScrollHight = $(this)[0].scrollHeight;
+        nScrollTop = $(this)[0].scrollTop;
+        if (nScrollTop + contents2.height() >= nScrollHight) {
+            data.nextMarker = null;
+            $("#objectDg").iDatagrid("loading");
+            var options = $("#objectDg").iDatagrid("options");
+            var queryParams = options.queryParams;
+            var params = $.extend(true, {}, queryParams);
+            $.post("/document/oss/getPageSet", params, function (res) {
+                if (res && res.rows && res.rows.length >= 0) {
+                    // data = data.rows.concat(res.rows);
+                    for (var i = 0; i < res.rows.length; i++) {
+                        $("#objectDg").iDatagrid('appendRow', res.rows[i]);
+                    }
+                    options.queryParams.nextMarker = res.nextMarker;
+                }
+                $("#objectDg").iDatagrid("loaded");
+            });
+        }
+    });
+
+    var UploadUrl = "";
+
+    function multiUpload(){
+        // 获取前缀
+        var data = $("#objectDg").iDatagrid("getData");
+        var keyPrefix = data.keyPrefix;
+        $.cookie('keyPrefix', "");
+        if(keyPrefix){
+            if(!UploadUrl){
+                UploadUrl = $.data(this, 'menubutton').options.uploadUrl;
+            }
+            $.cookie('keyPrefix', keyPrefix);
+            //$.data(this, 'menubutton').options.uploadUrl =UploadUrl+"&keyPrefix="+encodeURIComponent(keyPrefix);
+            $.data(this, 'menubutton').options.uploadUrl =UploadUrl;
+        }
+        uploadHandler(this);
+    }
+</script>
+</body>
+</html>

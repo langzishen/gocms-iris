@@ -1,0 +1,24 @@
+<nav>
+    <div class="top_big">
+        <div class="top_left">
+            <a href="#"><img src="/static/index/img/logo.png"></a>
+            <div class="logo_zi">
+                <h2>石头软件</h2>
+                <p>TUODONGRUANJIAN</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="top_right">
+            <ul>
+                <li{{if eq .nav "index_index"}} class="active"{{end}}><a href="/index/index/index">首页</a></li>
+                <li{{if eq .nav "about_index"}} class="active"{{end}}><a href="/index/about/index">关于</a></li>
+                <li{{if eq .nav "product_index"}} class="active"{{end}}><a href="/index/product/index">服务</a></li>
+                <li{{if eq .nav "about_join"}} class="active"{{end}}><a href="/index/about/join">招聘</a></li>
+                <li{{if eq .nav "article_index"}} class="active"{{end}}><a href="/index/article/index">新闻</a></li>
+                <li{{if eq .nav "contact_index"}} class="active"{{end}}><a href="/index/about/contact">联系</a></li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+</nav>

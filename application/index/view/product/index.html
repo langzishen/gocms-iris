@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <link href="/static/index/css/animate.css" rel="stylesheet">
+    <link href="/static/index/css/style.css" rel="stylesheet">
+    <script src="/static/index/js/wow.min.js" type="text/javascript"></script>
+    <script>
+        if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+            new WOW().init();
+        };
+    </script>
+</head>
+
+<body>
+<!-------------nav begin--------------------->
+{{ render "layouts/nav.html" }}
+<!---------------------nav  end---------------------->
+
+<div class="product_banner">
+    <h1 class="bounceIn wow" data-wow-duration="1s">用最前沿的技术为客户提供稳定高效的技术服务</h1>
+    <a href="#" class="bounceIn wow" data-wow-duration="1s">立即前往</a>
+</div>
+
+<!----------------------product_banner  end----------------------------------------->
+
+<div class="product_big mt30 pb50">
+    <div class="product_content">
+        <div class="product_soft">
+            <div class="product_left fadeInLeft wow" data-wow-delay="0.6s">
+                <img src="/static/index/img/product_one.png"/>
+            </div>
+            <div class="product_right wow fadeInRight" data-wow-delay="0.8s">
+                <h2>实验室信息管理软件</h2>
+                <p>在这个竞争激烈的时代，信息化的重要性空前突出；大量的企业开始注重利用信息化手段优化企业管理、增强企业核心竞争力。企业不仅要通过降低成本提高效率来保障企业利润，更需要在信息化建设中结合业务发展不断创新；通过规范管理、知识整合及传递、从提高单一效率到通过协同提高企业整体效率等都是当前企业家重点考虑的问题。而通过网络化的协同信息化系统来改善管理运作是其中之一必要的解决方案。</p>
+                <a href="#">查看更多</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="product_big mt30 pb50">
+    <div class="product_content">
+        <div class="product_soft">
+            <div class="product_right  fadeInLeft wow" data-wow-delay="0.8s"  style="margin-left:inherit; margin-right:160px;">
+                <h2>公路工程数据质量监控管理系统软件</h2>
+                <p>系统包含质量检测管理监控信息平台、人员考勤系统、质量信息数据终端管理软件(TAM、QIE)、压力机和万能试验机数据采集与监控系统、试验室视频监控系统、张拉压机系统 。 系统包含质量检测管理监控信息平台、人员考勤系统、质量信息数据终端管理软件(TAM、QIE)、压力机和万能试验机数据采集与监控系统、试验室视频监控系统、张拉压机系统、混凝土拌合站动态数据</p>
+                <a href="#">查看更多</a>
+            </div>
+
+            <div class="product_left   wow fadeInRight" data-wow-delay="1.0s">
+                <img src="/static/index/img/product_two.png"/>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+
+<!-----------------product_big end------------------------->
+
+<div class="mt30 introduce_big mb30">
+    <div class="introduce_content">
+        <h2 class="bounceInDown wow" data-wow-duration="3s">技术介绍</h2>
+        <p class="bounceInDown wow" data-wow-duration="3s">拓东软件的网络产品支持丰富的数据通信特性，包括数据中心技术、虚拟化技术、以太网交换技术、广域网技术、路由技术、MPLS技术、VPN技术、QoS技术、语音技术和安全技术等。这些技术均集成在H3C公司的核心软件平台——Comware软件平台上。目前，H3C拥有ComwareV5和ComwareV7两大软件平台。</p>
+        <div class="introduce mt10 bounceInUp wow" data-wow-duration="3s">
+            <ul>
+                <li>
+                    <span><img src="/static/index/img/TMILS.png"/></span>
+                    <a href="#">TLIMS</a>
+                </li>
+                <li><span><img src="/static/index/img/TBMS.png"/></span>
+                    <a href="#">TBMS</a>
+                </li><div class="clear"></div>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--------------------introduce_big  end-------------------------->
+
+<!-------------footer begin--------------------->
+{{ render "layouts/foot.html" }}
+<!---------------------footer  end---------------------->
+</body>
+</html>

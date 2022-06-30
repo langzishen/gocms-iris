@@ -1,0 +1,88 @@
+<div class="topjui-fluid">
+    <fieldset>
+        <legend>个人基础信息</legend>
+    </fieldset>
+    <div class="topjui-row">
+        <div class="topjui-col-sm4" style="text-align: center">
+            <img src="/static/favicon.ico" id="avatar" style="  margin-left: 80px;width: 168px;height: 168px;display: block">
+        </div>
+        <div class="topjui-col-sm8">
+            <div class="topjui-row"><div class="topjui-col-sm12"><label class="topjui-form-label">用户名</label>
+                <div class="topjui-input-block">
+                    <input type="text" name="account" data-toggle="topjui-textbox" value="{{.info.Account}}" data-options="readonly:true,required:true,prompt:'必填'">
+                </div>
+            </div></div>
+            <div class="topjui-row"><div class="topjui-col-sm12"><label class="topjui-form-label">昵称</label>
+                <div class="topjui-input-block">
+                    <input type="text" name="nickname" data-toggle="topjui-textbox" value="{{.info.Nickname}}" data-options="required:true,prompt:'必填'">
+                </div>
+            </div></div>
+            <div class="topjui-row"><div class="topjui-col-sm12"><label class="topjui-form-label">性别</label>
+                <div class="topjui-input-block">
+                    <input name="sex" data-toggle="topjui-radiobutton" data-options="value:'1',label:'男',labelPosition:'after'{{if eq .info.Sex 1}},checked:'true'{{end}}">
+                    <input name="sex" data-toggle="topjui-radiobutton" data-options="value:'2',label:'女',labelPosition:'after'{{if eq .info.Sex 1}},checked:'true'{{end}}">
+                </div>
+            </div></div>
+            <div class="topjui-row"><div class="topjui-col-sm12"><label class="topjui-form-label">年龄</label>
+                <div class="topjui-input-block">
+                    <input type="text" name="age" value="{{.info.Age}}" data-toggle="topjui-numberbox" data-options="groupSeparator:''">
+                </div>
+            </div></div>
+            <div class="topjui-row"><div class="topjui-col-sm12"><label class="topjui-form-label">角色</label>
+                <div class="topjui-input-block">
+                    <input type="text" name="post" value="{{.role_name}}" data-toggle="topjui-textbox" data-options="readonly:true">
+                </div>
+            </div></div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class=" topjui-col-sm12">
+            <label class="topjui-form-label">上传头像</label>
+            <div class="topjui-input-block">
+                <input type="text" name="logo" data-toggle="topjui-uploadbox" value="{{.info.Logo}}"
+                       data-options="editable:false,
+                                   buttonText:'上传图片',
+                                   accept:'images',
+                                   uploadUrl:'/{{.RequestApp}}/user/ajax_upload',onChange:changeAvatar">
+            </div>
+        </div>
+        <div class="topjui-col-sm12" style="display: block;margin: auto">
+            <label class="topjui-form-label"></label><p>建议尺寸168*168，支持jpg、png、gif</p>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">固定电话</label>
+            <div class="topjui-input-block">
+                <input type="text" name="cellphone" value="" data-toggle="topjui-textbox">
+            </div>
+        </div>
+    </div>
+
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">电子邮箱</label>
+            <div class="topjui-input-block">
+                <input type="text" name="email" value="{{.info.Email}}" data-toggle="topjui-textbox" data-options="required:true,validType:'email',prompt:'必填'">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">手机</label>
+            <div class="topjui-input-block">
+                <input type="text" name="phone" value="{{.info.Phone}}" data-toggle="topjui-textbox" data-options="required:true,validType:'cellphone',prompt:'必填'">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<!-- 存放具体业务页面需要引入的javascript文件 -->
+
+<script>
+    function changeAvatar(newValue, oldValue){
+        if(newValue){
+            $('#avatar').attr("src",newValue);
+        }
+    }
+</script>

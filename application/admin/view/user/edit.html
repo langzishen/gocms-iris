@@ -1,0 +1,44 @@
+<div class="topjui-fluid">
+    <input type="hidden" name="id" value="{{.info.Id}}">
+    <br>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">用户名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="account" data-toggle="topjui-textbox" value="{{.info.Account}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">昵称</label>
+            <div class="topjui-input-block">
+                <input type="text" name="nickname" data-toggle="topjui-textbox" value="{{.info.Nickname}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">手机</label>
+            <div class="topjui-input-block">
+                <input type="text" name="phone" data-toggle="topjui-textbox" value="{{.info.Phone}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">邮箱</label>
+            <div class="topjui-input-block">
+                <input type="text" name="email" data-toggle="topjui-textbox" value="{{.info.Email}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'启用','value':1{{if eq .info.Status 1}},'selected':true{{end}}},{'text':'禁用','value':0{{if eq .info.Status 0}},'selected':true{{end}}}]">
+            </div>
+        </div>
+    </div>
+</div>

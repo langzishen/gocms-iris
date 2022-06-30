@@ -1,0 +1,65 @@
+<input type="hidden" name="id" value="{{.info.Id}}">
+<input type="hidden" name="group_id" value="{{.info.GroupId}}">
+<input type="hidden" name="pid" value="{{.info.Pid}}">
+<input type="hidden" name="level" value="{{.info.Level}}">
+<input type="hidden" name="type" value="{{.info.Type}}">
+
+<div class="topjui-fluid">
+    <br>
+    <div class="topjui-row" >
+        <!--<div class="topjui-col-sm6">
+          <label class="topjui-form-label">所属大菜单</label>
+          <div class="topjui-input-block">
+            <input type="text" name="group_id" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: {{.top_menu_list}}">
+          </div>
+        </div>-->
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">所属大菜单</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-textbox" value="{{.up_info.Title}}" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">模块名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="name" data-toggle="topjui-textbox" data-options="required:true" value="{{.info.Name}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">显示名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="title" data-toggle="topjui-textbox" data-options="required:true" value="{{.info.Title}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">图标</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-iconpicker" name="icon" data-options="delIcon:true" value="{{.info.Icon}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'启用','value':1{{if eq .info.Status 1}},'selected':true{{end}}},{'text':'禁用','value':0{{if eq .info.Status 0}},'selected':true{{end}}}]">
+            </div>
+        </div>
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">排序</label>
+            <div class="topjui-input-block">
+                <input type="text" name="sort" data-toggle="topjui-textbox" value="{{.info.Sort}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">描述</label>
+            <div class="topjui-input-block">
+                <input type="text" name="remark" data-toggle="topjui-textbox" value="{{.info.Remark}}">
+            </div>
+        </div>
+    </div>
+</div>

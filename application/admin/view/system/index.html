@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css"  href="/static/topjui/themes/default/topjui.smartness-blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" src="/static/static/public/js/common.js"></script>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="/static/static/plugins/layui/layui.js"></script>
+</head>
+<body>
+<form id="systemDgF" title="" class="panel-body panel-body-noborder window-body">
+    <div class="topjui-fluid">
+        <br>
+        <div id="systemItabs" data-toggle="topjui-tabs" style="width:1000px;height:720px;">
+            <div title="站点设置" data-options="iconCls:'icon-reload',closable:false" style="overflow:auto;display:none;">
+                <fieldset class="ele-box">
+                <legend class="ele-title">站点设置</legend>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">网站协议</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="app_protocol" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'http','value':'http'{{if eq .info.app_protocol `http`}},'selected':true{{end}}},{'text':'https','value':'https'{{if eq .info.app_protocol `https`}},'selected':true{{end}}}]">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">端口号</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="app_url_port" data-toggle="topjui-textbox" value="{{.info.app_url_port}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">title</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="app_name" data-toggle="topjui-textbox" value="{{.info.app_name}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">url</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="app_url" data-toggle="topjui-textbox" value="{{.info.app_url}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">keywords</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="site_keywords" data-toggle="topjui-textbox" value="{{.info.site_keywords}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">description</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="site_description" data-toggle="topjui-textbox" value="{{.info.site_description}}" data-options="required:true,multiline:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">网站关闭提示</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="offline_message" data-toggle="topjui-textbox" value="{{.info.offline_message}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row">
+                    <div class="topjui-col-sm12"><label class="topjui-form-label">ICP</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="site_icp_num" data-toggle="topjui-textbox" value="{{.info.site_icp_num}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row">
+                    <div class="topjui-col-sm12"><label class="topjui-form-label">邮箱</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="app_author_email" data-toggle="topjui-textbox" value="{{.info.app_author_email}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row">
+                    <div class="topjui-col-sm12"><label class="topjui-form-label">version</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="app_version" data-toggle="topjui-textbox" value="{{.info.app_version}}">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            </div>
+            <div title="数据库设置" data-options="iconCls:'icon-reload',closable:false" style="overflow:auto;display:none;">
+                <fieldset class="ele-box">
+                <legend class="ele-title">数据库设置</legend>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm8">
+                        <label class="topjui-form-label">host</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="db_host" data-toggle="topjui-textbox" value="{{.db.host}}" data-options="required:true">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm4">
+                        <label class="topjui-form-label">端口号</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="db_port" data-toggle="topjui-textbox" value="{{.db.port}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">数据库名称</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="db_database" data-toggle="topjui-textbox" value="{{.db.database}}" data-options="required:true">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">用户名</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="db_user" data-toggle="topjui-textbox" value="{{.db.user}}" data-options="required:true">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">密码</label>
+                        <div class="topjui-input-block">
+                            <input type="password" name="db_user_password" data-toggle="topjui-textbox" value="{{.db.password}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            </div>
+            <div title="上传设置" data-options="iconCls:'icon-reload',closable:false" style="overflow:auto;display:none;">
+                <fieldset class="ele-box">
+                <legend class="ele-title">上传设置</legend>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">上传类型</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="file_upload_type" data-toggle="topjui-textbox" value="{{.upload.file_upload_type}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">大小限制</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_max_size" data-toggle="topjui-numberbox" value="{{.upload.upload_type_config.max_size}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">本地上传路径</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_root_path" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.root_path}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">云·region_id</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_region_id" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.region_id}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">云·access_key_id</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_access_key_id" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.access_key_id}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">云·access_key_secret</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_access_key_secret" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.access_key_secret}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">云·bucket</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_bucket" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.bucket}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">云·endpoint</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_endpoint" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.endpoint}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">云·request_uri</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_request_uri" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.request_uri}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm12">
+                        <label class="topjui-form-label">云·request_url</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="upload_request_url" data-toggle="topjui-textbox" value="{{.upload.upload_type_config.request_url}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            </div>
+            <div title="权限设置·RBAC" data-options="iconCls:'icon-reload',closable:false" style="overflow:auto;display:none;">
+                <fieldset class="ele-box">
+                <legend class="ele-title">权限设置·RBAC</legend>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">认证类型</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_user_auth_type" data-toggle="topjui-textbox" value="{{.rbac.user_auth_type}}" data-options="required:true">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">认证key</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_user_auth_key" data-toggle="topjui-textbox" value="{{.rbac.user_auth_key}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">超级管理员key</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_admin_auth_key" data-toggle="topjui-textbox" value="{{.rbac.admin_auth_key}}" data-options="required:true">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">需要认证的控制器</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_require_auth_controller" data-toggle="topjui-textbox" value="{{.rbac.require_auth_controller}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">不需要认证的控制器</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_no_auth_controller" data-toggle="topjui-textbox" value="{{.rbac.no_auth_controller}}">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">需要认证的操作</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_require_auth_action" data-toggle="topjui-textbox" value="{{.rbac.require_auth_action}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">不需要认证的操作</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_no_auth_action" data-toggle="topjui-textbox" value="{{.rbac.no_auth_action}}">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">权限·表名</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_table_access" data-toggle="topjui-textbox" value="{{.rbac.table_access}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">用户·表名</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_table_user" data-toggle="topjui-textbox" value="{{.rbac.table_user}}" data-options="required:true">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">节点·表名</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_table_node" data-toggle="topjui-textbox" value="{{.rbac.table_node}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+                <div class="topjui-row" >
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">用户组·表名</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_table_role" data-toggle="topjui-textbox" value="{{.rbac.table_role}}" data-options="required:true">
+                        </div>
+                    </div>
+                    <div class="topjui-col-sm6">
+                        <label class="topjui-form-label">用户组-用户·表名</label>
+                        <div class="topjui-input-block">
+                            <input type="text" name="rbac_table_role_user" data-toggle="topjui-textbox" value="{{.rbac.table_role_user}}" data-options="required:true">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="cfAuctionAddDg-buttons" style="width: 373px;" class="dialog-button">
+    <a href="javascript:ajaxSubmit(0)" class="l-btn topjui-btn-green l-btn-small" style="position: static; display: inline-block; left: auto; height: 30px;"><span class="l-btn-left l-btn-icon-left" style="margin-top: 0px;"><span class="l-btn-text">保存</span><span class="l-btn-icon fa fa-plus">&nbsp;</span></span></a>
+</div>
+</body>
+<script type="application/javascript">
+    function ajaxSubmit(){
+        // 1. 显示进度条（提交时请使用进度条 或者 禁用'提交'按钮，防止因为网络延迟用户重复提交）
+        $.iMessager.progress({'text': '请求中……'});
+
+        // 2. 提交操作
+        var postData = $("#systemDgF").serialize(); // 请求中携带的JSON数据
+        var url = '/{{.RequestApp}}/{{.RequestController}}/index';//请求的地址
+        $.post(url, postData, function (res) {
+            $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+            if (res.statusCode == 200) {
+                $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                $.iMessager.progress('close');  // 如果提交完成则隐藏进度条
+            }
+        }, "JSON")
+    }
+
+</script>
+</html>

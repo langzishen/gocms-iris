@@ -1,0 +1,99 @@
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'west',title:'控制器',split:true,border:false,width:'30%',iconCls:'fa fa-book',headerCls:'border_right',bodyCls:'border_right'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'data_controllers-datagrid',
+                    url:'/{{.RequestApp}}/{{.RequestController}}/data_access_controllers',
+                    childGrid:{
+                        param:'id:id',
+                        grid:[
+                            {type:'datagrid',id:'data_actions-datagrid'}
+                        ]
+                    }">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'编号'"></th>
+                <th data-options="field:'name',title:'控制器'"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div data-options="region:'center',iconCls:'fa fa-book',title:'操作列表',width:'30%',split:true,border:false,bodyCls:'border_left'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'data_actions-datagrid',
+                    idField:'id',
+                    reloadAfterSave:true,
+                    selectOnCheck:true,
+			        checkOnSelect:true,
+			        reloadAfterSave:true,
+                    url:'/{{.RequestApp}}/{{.RequestController}}/data_access_actions',
+                    childGrid:{
+                        param:'id:id',
+                        grid:[
+                            {type:'datagrid',id:'data_tids-datagrid'}
+                        ]
+                    }">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'编号'"></th>
+                <th data-options="field:'name',title:'操作'"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div data-options="region:'east',iconCls:'fa fa-book',title:'数据授权列表',width:'40%',split:true,border:false,bodyCls:'border_left'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'data_tids-datagrid',
+                    idField:'classid',
+                    reloadAfterSave:true,
+                    selectOnCheck:true,
+			        checkOnSelect:true,
+			        reloadAfterSave:true,
+                    url:'/{{.RequestApp}}/{{.RequestController}}/data_access_tids?role_id={{.role_id}}'">
+            <thead>
+            <tr>
+                <th data-options="field:'classid',title:'编号'"></th>
+                <th data-options="field:'classtitle',title:'分类名称'"></th>
+                <th data-options="field:'checked_s',title:'状态',align:'center',sortable:false,
+                    formatter: function(value,row,index){
+                        console.log(value);
+						if (value == 1){
+							return '<span style=\'color:green\'>已授权</span>';
+						} else {
+						    return '<span style=\'color:red\'>未授权</span>';
+						}
+                    }"></th>
+                <th data-options="field:'checked',title:'操作-授权',align:'center',sortable:false,formatter: dodataaccess"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script>
+    var role_id = {{.role_id}};
+    function dodataaccess(value, row, index) {
+        if (value == 1){
+            return '<input type="checkbox" checked value="'+row.classid+'" onclick="dodataaccessAJAX('+value+','+row.node_id+','+row.classid+',\''+row.model+'\')">';
+        } else if (value == 0) {
+            return '<input type="checkbox" value="'+row.classid+'" onclick="dodataaccessAJAX('+value+','+row.node_id+','+row.classid+',\''+row.model+'\')">';
+        }
+    }
+    function dodataaccessAJAX(value,node_id,tid,model_name){
+        var url
+        if (value == 1){
+            url = "/{{.RequestApp}}/role/dodeldataaccess";
+        }else{
+            url = "/{{.RequestApp}}/role/doadddataaccess";
+        }
+        postData = {role_id:role_id,node_id:node_id,tid:tid,model:model_name};
+        $.post(url,postData,function (res){
+            $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+            if (res.statusCode == 200) {
+                $("#data_tids-datagrid").iDatagrid('reload');//请求成功后刷新表格
+            }
+        },"JSON")
+    }
+</script>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css" href="/static/topjui/themes/default/topjui.smartness-black.css" rel="stylesheet"
+          id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <link type="text/css" href="/static/static/public/css/font.css" rel="stylesheet"/>
+    <link type="text/css" href="/static/static/public/css/main.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心-->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- layui框架js -->
+    <script src="/static/static/plugins/layui/layui.js" charset="utf-8"></script>
+    <style>
+        body {
+            background: #F0F2F5;
+            margin: 15px 10px;
+        }
+
+        .cardList-wrapper, .sale-list, .text-content {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cardList-wrapper .card-item:hover {
+            -webkit-box-shadow: 3px 5px 15px rgb(40 40 40 / 36%);
+            box-shadow: 3px 5px 15px rgb(40 40 40 / 36%);
+            -webkit-transform: scale(1.03);
+            transform: scale(1.03);
+            -webkit-transition: all .1s ease-out;
+            transition: all .1s ease-out;
+        }
+
+        .cardList-wrapper .card-item {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            height: 149px;
+            padding: 15px 15px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 5px 25px;
+            width: 25%;
+            color: #ffffff;
+        }
+
+        .cardList-wrapper .card-item:nth-child(1) {
+            background: -webkit-gradient(linear, left top, right top, from(#5171fd), to(#c97afd));
+            background: linear-gradient(90deg, #5171fd, #c97afd);
+            -webkit-box-shadow: 0 5px 10px #c97afd;
+            box-shadow: 0 5px 10px #c97afd;
+        }
+
+        .cardList-wrapper .card-item:nth-child(2) {
+            background: -webkit-gradient(linear, left top, right top, from(#3dadf6), to(#737bfc));
+            background: linear-gradient(90deg, #3dadf6, #737bfc);
+            -webkit-box-shadow: 0 5px 10px #737bfc;
+            box-shadow: 0 5px 10px #737bfc;
+        }
+
+        .cardList-wrapper .card-item:nth-child(3) {
+            background: -webkit-gradient(linear, left top, right top, from(#ea677c), to(#ef9b5f));
+            background: linear-gradient(90deg, #ea677c, #ef9b5f);
+            -webkit-box-shadow: 0 5px 10px #ef9b5f;
+            box-shadow: 0 5px 10px #ef9b5f;
+        }
+
+        .cardList-wrapper .card-item:nth-child(4) {
+            background: -webkit-gradient(linear, left top, right top, from(#42d79b), to(#a6e25f));
+            background: linear-gradient(90deg, #42d79b, #a6e25f);
+            -webkit-box-shadow: 0 5px 10px #a6e25f;
+            box-shadow: 0 5px 10px #a6e25f;
+        }
+
+        .suffix {
+            font-size: .75rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+        }
+
+        .all-count {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-top: 12px;
+            padding-left: 25px;
+        }
+
+        .card-info {
+            height: 46px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .card-info span {
+            font-size: .9rem;
+            display: block;
+        }
+
+        .sale-list .col {
+            width: 33.33333333%;
+            padding: 5px;
+        }
+
+        .text-content .col {
+            width: 100%;
+            padding: 5px;
+        }
+
+        .card {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            color: rgba(0, 0, 0, .65);
+            font-size: 14px;
+            font-variant: tabular-nums;
+            line-height: 1.5;
+            list-style: none;
+            -webkit-font-feature-settings: "tnum";
+            font-feature-settings: "tnum";
+            position: relative;
+            background: #fff;
+            border-radius: 2px;
+            -webkit-transition: all .3s;
+            transition: all .3s;
+        }
+
+        .sale-list .card-hoverable {
+            cursor: pointer;
+        }
+
+        .sale-list .card-hoverable:hover {
+            border-color: rgba(0, 0, 0, .09);
+            -webkit-box-shadow: 0 2px 8px rgb(0 0 0 / 9%);
+            box-shadow: 0 2px 8px rgb(0 0 0 / 9%);
+        }
+
+        .card-head {
+            line-height: 48px !important;
+            min-height: 48px;
+            margin-bottom: -1px;
+            padding: 0 15px;
+            color: rgba(0, 0, 0, .85);
+            font-weight: 500;
+            font-size: 16px;
+            background: transparent;
+            border-bottom: 1px solid #f0f0f0;
+            border-radius: 2px 2px 0 0;
+            zoom: 1;
+            display: flex;
+        }
+
+        .card-body {
+            padding: 5px;
+        }
+
+        .card-body-line {
+            display: block;
+        }
+
+        .card-body-line {
+            min-height: 40px;
+            line-height: 40px;
+            padding: 5px 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .card-body-line:hover {
+            background: #FAFAFA;
+        }
+
+        .card-body-line:last-child {
+            border: 0;
+        }
+
+        .card-body-line a {
+            height: 100%;
+            width: 100%;
+            display: inline-block;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .text-content-body {
+            padding: 10px;
+        }
+
+        .text-content-body p {
+            font-size: 14px;
+            padding: 5px;
+        }
+
+        .card-head-icon {
+            width: 20px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main">
+    <div class="cardList-wrapper">
+        <div class="card-item">
+            <div class="card-title">消息总数</div>
+            <div class="all-count">
+                <span>{{.message_count}}</span>
+                <span class="suffix">条</span>
+            </div>
+            <div class="card-info">
+                <span>今日消息数：{{.message_today_count}}条</span>
+            </div>
+        </div>
+        <div class="card-item">
+            <div class="card-title">访问量</div>
+            <div class="all-count">
+                <span>{{.pv_count}}</span>
+                <span class="suffix">万次</span>
+            </div>
+            <div class="card-info">
+                <span>日访问量：{{.pv_day_count}}万次</span>
+            </div>
+        </div>
+        <div class="card-item">
+            <div class="card-title">用户总数</div>
+            <div class="all-count">
+                <span>{{.user_count}}</span>
+                <span class="suffix">个</span>
+            </div>
+            <div class="card-info">
+                <span>今日新增用户数：{{.user_day_count}}个</span>
+            </div>
+        </div>
+        <div class="card-item">
+            <div class="card-title">文章总数</div>
+            <div class="all-count">
+                <span>{{.article_count}}</span>
+                <span class="suffix">篇</span>
+            </div>
+            <div class="card-info">
+                <span>今日新增文章数：{{.article_day_count}}篇</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-content">
+        <div class="col">
+            <div class="card card-hoverable">
+                <!--                <div class="card-head"></div>-->
+                <div class="card-body text-content-body">
+                    <p>
+                        <span style="font-weight: bold">在线演示：</span>
+                        <a style="color: purple" href="#" target="_blank">gocms</a> |
+                        <a style="color: blue" href="#" target="_blank">版本：</a> |
+                        <a style="color: red" href="#" target="_blank">联系我们</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sale-list">
+        <div class="col">
+            <div class="card card-hoverable">
+                <div class="card-head">
+                    <span class="card-head-icon"><svg t="1624610578335" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1065" width="100%" height="100%"><path d="M464.904 256.496L467.288 88H91.704v168.496h373.2z m0 0" fill="#76DA91" p-id="1066"></path><path d="M776.968 490.04l4.376-168.496H91.704v168.496h685.264z m0 0" fill="#76DA91" p-id="1067"></path><path d="M617.56 723.584l3.36-168.496H91.704v168.496h525.856z m0 0" fill="#76DA91" p-id="1068"></path><path d="M313.704 957.128l1.416-168.496H91.704v168.496h222z m0 0" fill="#76DA91" p-id="1069"></path><path d="M41.8 975.608V88.144H0V1024h1009.936v-48.392H41.8z m0 0" fill="#76DA91" p-id="1070"></path></svg></span>
+                    <span>柱状图展示效果</span>
+                </div>
+                <div class="card-body">
+                    <!--                    <div data-toggle="topjui-echarts"-->
+                    <!--                         data-options="id:'barChart',url:'../../json/echarts/bar.json',height:400"></div>-->
+                    <div id="barChart" style="height: 400px;width: 100%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card card-hoverable">
+                <div class="card-head">
+                    <span class="card-head-icon"><svg t="1624610641908" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1215" width="100%" height="100%"><path d="M959.159 928.219H64.063V98.125h37.045v787.166h858.051z" fill="#F47A75" p-id="1216"></path><path d="M580.658 796.245L369.686 628.169 158.642 760.785l-17.659-37.737 230.991-145.15 208.508 166.113 334.054-270.609 21.225 35.183z" fill="#F47A75" p-id="1217"></path><path d="M152.112 601.753l-28.68-27.17L360.23 238.944 569.003 494.92 903.52 103.683l26.316 30.213-361.462 422.75L362.245 303.91z" fill="#F47A75" p-id="1218"></path></svg></span>
+                    <span>折线图展示效果</span>
+                </div>
+                <div class="card-body">
+                    <!--                    <div data-toggle="topjui-echarts"-->
+                    <!--                         data-options="id:'lineChart',url:'../../json/echarts/line.json',height:400"></div>-->
+                    <div id="lineChart" style="height: 400px;width: 100%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card card-hoverable">
+                <div class="card-head">
+                    <span class="card-head-icon"><svg t="1624610661756" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1363" width="100%" height="100%"><path d="M520.3968 554.3936l-20.8896-7.3984-6.016-5.9904-126.592-126.72L197.4016 244.736A423.7312 423.7312 0 0 0 82.304 535.296C82.688 769.8944 272.384 959.488 506.88 960c179.584 0 333.0048-111.616 395.0848-269.1072l-123.9808-44.288-257.6128-92.2112z" fill="#0780CF" p-id="1364"></path><path d="M476.8 430.4128l-58.496-58.5216-218.7008-218.5984A423.2448 423.2448 0 0 1 476.8 38.4v392.0128z" fill="#0780CF" p-id="1365"></path><path d="M530.5088 80.7936c228.3008 7.5008 410.7008 194.4064 411.1872 424.3968 0 45.5168-7.1936 89.216-20.4032 130.304l-390.784-139.776V80.768z" fill="#0780CF" p-id="1366"></path></svg></span>
+                    <span>饼状图展示效果</span>
+                </div>
+                <div class="card-body">
+                    <!--                    <div data-toggle="topjui-echarts"-->
+                    <!--                         data-options="id:'pieChart',url:'../../json/echarts/pie.json',height:400"></div>-->
+                    <div id="pieChart" style="height: 400px;width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sale-list">
+        <div class="col">
+            <div class="card card-hoverable">
+                <div class="card-head">
+                    <span class="card-head-icon"><svg t="1624610303257" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1066" width="100%" height="100%"><path d="M1006.762667 443.682133l-129.0752 324.488533-109.806933 0c4.864-39.645867 12.151467-91.886933 21.8624-156.740267-10.5472 28.535467-22.186667 57.309867-34.9696 86.3232l-30.3616 70.417067-110.062933 0 45.806933-324.488533 87.1936 0c-1.655467 8.482133-11.2128 70.417067-28.689067 185.838933 4.352-11.8784 28.859733-73.8304 73.5232-185.838933l83.7632 0L845.653333 629.504c18.0736-54.272 42.734933-116.206933 74.001067-185.838933L1006.762667 443.665067zM608.768 603.8016l-138.666667 0-20.309333 78.4384c-4.2496 16.401067-5.8368 26.965333-4.7616 31.709867 1.0752 4.744533 4.881067 7.099733 11.4176 7.099733 8.123733 0 14.370133-3.140267 18.7392-9.4208 4.369067-6.280533 8.891733-18.449067 13.550933-36.488533l12.3904-47.8208 101.546667 0-6.929067 26.7776c-5.802667 22.408533-11.6224 39.6288-17.476267 51.6608-5.853867 12.032-15.581867 24.866133-29.201067 38.536533-13.6192 13.6704-29.0304 23.9104-46.267733 30.737067-17.237333 6.826667-37.512533 10.257067-60.842667 10.257067-22.6304 0-41.728-3.3792-57.309867-10.103467-15.581867-6.741333-26.658133-15.991467-33.245867-27.733333-6.587733-11.758933-9.915733-24.695467-9.966933-38.8096-0.0512-14.114133 3.413333-34.6624 10.3936-61.627733l27.374933-105.762133c8.209067-31.709867 18.8416-56.712533 31.880533-75.025067 13.038933-18.312533 30.293333-32.341333 51.729067-42.0864 21.435733-9.745067 44.4416-14.626133 69.000533-14.626133 30.0544 0 53.316267 5.870933 69.802667 17.629867 16.4864 11.758933 26.146133 27.323733 28.996267 46.728533 2.833067 19.4048-0.290133 46.6944-9.386667 81.851733L608.768 603.8016zM520.209067 473.719467c-7.424 0-12.629333 2.321067-15.581867 6.9632-2.9696 4.642133-7.099733 17.169067-12.373333 37.5808L485.376 544.768l31.2832 0 6.8608-26.504533c4.864-18.773333 7.0144-30.890667 6.485333-36.352C529.493333 476.450133 526.216533 473.719467 520.209067 473.719467zM431.342933 400.503467c-23.6032 10.376533-42.5984 25.2928-56.951467 44.782933-14.370133 19.490133-26.077867 46.08-35.106133 79.8208l-30.1568 112.5376c-7.68 28.689067-11.502933 50.551467-11.434667 65.570133 0.068267 15.018667 3.720533 28.791467 10.973867 41.284267 7.253333 12.509867 19.456 22.340267 36.608 29.508267 0.7168 0.290133 1.536 0.494933 2.2528 0.785067l-2.884267 10.496-128.529067 0-7.867733-248.4736L139.844267 785.271467 17.237333 785.271467l150.493867-546.56 122.606933 0 14.4384 246.101333 67.771733-246.101333 122.606933 0-42.427733 154.112C445.457067 394.990933 438.289067 397.448533 431.342933 400.503467z" fill="#FAB45A" p-id="1067"></path></svg></span>
+                    <span>最新文章</span>
+                </div>
+                <div class="card-body">
+                    {{range $new_article_key,$new_article_val:=.new_article_list}}
+                    <span class="card-body-line">
+                        <a href="javascript:window.parent.addParentTab({href:'/boss/article/info?id={{$new_article_val.id}}',title:'{{$new_article_val.title}}'})">{{$new_article_val.title}}</a>
+                    </span>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card card-hoverable">
+                <div class="card-head">
+                    <span class="card-head-icon"><svg t="1624604828322" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1099" width="100%" height="100%"><path
+                            d="M451.854 95.981c0.024-0.064 0.048-0.145 0.081-0.145-0.081-0.064-0.097 0-0.081 0.145zM142.588 440.622c-0.015 0.01-0.03 0.021-0.037 0.017 0.006 0.016 0.019 0.006 0.037-0.017z m377.831 189.291c-15.925 0-28.761 5.461-38.505 16.381-9.746 10.92-14.619 27.388-14.619 49.404 0 21.667 5.003 38.092 15.011 49.272 10.005 11.182 22.71 16.772 38.113 16.772 15.401 0 28.04-5.548 37.917-16.643 9.876-11.095 14.814-27.735 14.814-49.926 0-21.927-4.81-38.286-14.423-49.075-9.617-10.789-22.385-16.185-38.308-16.185z"
+                            fill="#FF3D2C" p-id="1100"></path><path
+                            d="M854.456 823.017c5.906-8.442 10.995-17.81 15.102-28.309C987.665 491.696 579.58 48.843 537.014 3.807c0.1 0.165 0.207 0.363 0.298 0.529-2.627-2.792-4.105-4.329-4.105-4.329 6.212 28.647 10.144 55.329 12.242 80.458-0.115-0.867-0.189-1.702-0.307-2.569 2.983 33.158 2.553 63.407-0.651 91.353-0.496 4.229-1 8.467-1.62 12.597-0.098 0.668-0.23 1.33-0.33 1.99-20.503 130.632-104.734 208.479-194.253 289.646-23.411-22.543-37.247-55.049-37.238-102.811 0.083-21.742 2.999-46.622 9.186-75.154l-0.207 0.141c0.074-0.354 0.132-0.685 0.207-1.048 0 0-63.854 41.285-116.968 119.19-0.009-0.008-0.017-0.025-0.017-0.025-0.182 0.264-0.355 0.563-0.545 0.827-3.403 5.022-6.766 10.16-10.053 15.48-0.157 0.239-0.298 0.495-0.447 0.735a430.615 430.615 0 0 0-8.847 15.075 376.645 376.645 0 0 0-1.991 3.569c-2.883 5.253-5.716 10.605-8.434 16.116-0.133 0.272-0.281 0.537-0.414 0.809a407.245 407.245 0 0 0-8.095 17.627c-0.627 1.446-1.223 2.917-1.833 4.371a380.69 380.69 0 0 0-5.89 14.935c-0.528 1.421-1.074 2.808-1.586 4.229-1.09 3.058-2.115 6.163-3.139 9.285-0.025 0.066-0.05 0.132-0.066 0.198-1.049 3.172-2.098 6.345-3.064 9.582-0.396 1.306-0.744 2.66-1.123 3.982a368.612 368.612 0 0 0-4.296 16.331 316.228 316.228 0 0 0-1.338 5.69c-1.537 6.873-2.958 13.812-4.122 20.933 0 0.05-0.017 0.1-0.017 0.148a329.55 329.55 0 0 0-1.727 11.696c-0.032 0.266-0.065 0.529-0.099 0.794a352.944 352.944 0 0 0-1.272 11.283c-0.05 0.43-0.083 0.86-0.124 1.298a391.231 391.231 0 0 0-0.884 11.044c-0.033 0.545-0.066 1.106-0.091 1.651a358.25 358.25 0 0 0-0.504 10.922l-0.05 1.949a366.226 366.226 0 0 0-0.124 10.87v2.164c0.033 3.618 0.115 7.253 0.256 10.912 0.025 0.769 0.042 1.545 0.083 2.313 0.157 3.659 0.363 7.344 0.62 11.044 0.074 0.793 0.115 1.57 0.173 2.362 0.281 3.733 0.636 7.492 1.024 11.268 0.083 0.784 0.157 1.553 0.248 2.33 0.413 3.849 0.917 7.723 1.454 11.614 0.107 0.734 0.207 1.462 0.306 2.197 0.578 3.989 1.23 8.028 1.933 12.076 0.124 0.645 0.214 1.289 0.338 1.933a392.635 392.635 0 0 0 2.495 12.771c0.099 0.479 0.19 0.958 0.281 1.438a451.803 451.803 0 0 0 3.18 13.745c0.05 0.231 0.1 0.454 0.157 0.677 4.874 19.627 11.234 39.84 19.346 60.657 4.097 10.499 9.186 19.866 15.101 28.309 69.223 121.396 265.021 200.978 265.021 200.978v-0.008c-0.676-0.277-56.816-23.185-119.421-62.98 62.605 39.796 118.746 62.702 119.421 62.973l0.033 0.016v-0.033c0.041 0.018 0.083 0.033 0.083 0.033 3.709-34.05 18.495-57.277 40.477-73.716-0.017-0.018-0.042-0.018-0.058-0.033 0.124-0.083 0.256-0.166 0.38-0.256 4.436-3.296 9.161-6.32 14.15-9.104 0.264-0.149 0.528-0.29 0.793-0.438 4.998-2.75 10.251-5.261 15.745-7.558 0.165-0.066 0.314-0.141 0.479-0.207 39.089 16.208 66.787 42.806 72.065 91.312 0 0 0.024-0.016 0.033-0.016v0.016s42.739-17.38 95.334-48.258c-0.066 0.066-0.132 0.141-0.198 0.215 60.06-35.229 133.083-88.122 170.048-152.933zM312.641 952.532z m82.736-161.03h-38.636v-83.667h-75.704v83.667h-38.636V600.154h38.636v75.313h75.704v-75.313h38.636v191.348zM587.9 768.594c-16.796 17.448-39.245 26.171-67.352 26.171-28.454 0-51.08-8.679-67.872-26.038-16.795-17.361-25.192-41.268-25.192-71.726 0-19.489 2.915-35.847 8.746-49.075 4.35-9.746 10.289-18.491 17.816-26.236 7.526-7.743 15.771-13.486 24.734-17.229 11.92-5.045 25.669-7.57 41.246-7.57 28.192 0 50.751 8.747 67.678 26.235 16.922 17.49 25.386 41.813 25.386 72.965 0.001 30.89-8.398 55.058-25.19 72.503z m41.637-136.071v-32.369h152.061v32.369H724.95v158.979h-38.635V632.523h-56.778z"
+                            fill="#FF3D2C" p-id="1101"></path></svg></span>
+                    <span>热门文章</span>
+                </div>
+                <div class="card-body">
+                    {{range $hot_article_key,$hot_article_val:=.hot_article_list}}
+                    <span class="card-body-line">
+                        <a href="javascript:window.parent.addParentTab({href:'/boss/article/info?id={{$hot_article_val.id}}',title:'{{$hot_article_val.title}}'})">{{$hot_article_val.title}}</a>
+                    </span>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card card-hoverable">
+                <div class="card-head">
+                    <span class="card-head-icon"><svg t="1624604929962" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1238" width="100%" height="100%"><path d="M685.2 327.1l-0.4-0.2c-4.2-1.9-8.5-2.8-12.9-2.8-11.8 0-23.3 6.7-28.8 18-7.6 15.6-1 34.8 14.7 42.6 6.7 3.5 64.7 36 64.7 124.2 0 49.7-15.7 81.9-28.8 100.2-14.5 20.2-29.5 28.8-31.2 29.7l-0.3 0.1c-15.8 7.9-22.2 27.1-14.3 42.9 5.5 10.9 16.5 17.7 28.7 17.7 4.9 0 9.8-1.2 14.2-3.4 3.9-2 95.5-50.1 95.5-187.3 0.1-132.1-96.9-179.7-101.1-181.7z m138.1-114.8c-5.2-3.4-11.1-5-17-5-10.5 0-20.8 5.1-27 14.6-9.5 14.6-5.4 34.5 9.3 44.2C793 269 895.8 338.9 895.8 512c0 71-17.1 135.5-49.4 186.5-25.7 40.6-52.1 58.8-53.2 59.6-14.7 9.8-18.7 29.7-8.9 44.4 5.9 8.9 15.9 14.2 26.6 14.2 6.3 0 12.4-1.9 17.7-5.4 1.4-0.9 34.6-23.2 67.2-72 42.4-63.4 63.9-139.9 63.9-227.3 0.1-210-130.8-296.2-136.4-299.7zM570.4 809.1c0 54.3-63.3 83.9-105 49.2L283.7 706.7H128c-35.3 0-64-28.7-64-64V381.4c0-35.4 28.8-64.1 64.2-64l154.3 0.5 183-152.3c41.7-34.7 104.9-5 104.9 49.2v594.3z" fill="#348BF9" p-id="1239"></path></svg></span>
+                    <span>通知公告</span>
+                </div>
+                <div class="card-body">
+                    {{range $notice_article_key,$notice_article_val:=.notice_article_list}}
+                    <span class="card-body-line">
+                        <a href="javascript:window.parent.addParentTab({href:'/boss/article/info?id={{$notice_article_val.id}}',title:'{{$notice_article_val.title}}'})">{{$notice_article_val.title}}</a>
+                    </span>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/static/plugins/echarts/echarts.min.js"></script>
+
+<script type="text/javascript">
+    barChartFun()
+
+    function barChartFun() {
+        let dom = document.getElementById("barChart");
+        let myChart = echarts.init(dom);
+        let option;
+
+        option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['蒸发量', '降水量']
+            },
+            calculable: true,
+            xAxis: [{
+                type: 'category',
+                data: ['春季', '夏季', '秋季', '冬季']
+            }],
+            yAxis: [{
+                type: 'value'
+            }],
+            series: [{
+                name: '蒸发量',
+                type: 'bar',
+                data: [25.9, 137.2, 160.4, 29.7],
+                markPoint: {
+                    data: [{
+                        type: 'max',
+                        name: '最大值'
+                    },
+                        {
+                            type: 'min',
+                            name: '最小值'
+                        }
+                    ]
+                },
+                markLine: {
+                    data: [{
+                        type: 'average',
+                        name: '平均值'
+                    }]
+                },
+                itemStyle: {
+                    color: '#76da91'
+                }
+            }, {
+                name: '降水量',
+                type: 'bar',
+                data: [27.5, 138.7, 176.5, 27.1],
+                markPoint: {
+                    data: [{
+                        name: '年最高',
+                        value: 182.2,
+                        xAxis: 7,
+                        yAxis: 183
+                    },
+                        {
+                            name: '年最低',
+                            value: 2.3,
+                            xAxis: 11,
+                            yAxis: 3
+                        }
+                    ]
+                },
+                markLine: {
+                    data: [{
+                        type: 'average',
+                        name: '平均值'
+                    }]
+                },
+                itemStyle: {
+                    color: '#63b2ee'
+                }
+            }]
+        };
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+    }
+
+    lineChartFun()
+
+    function lineChartFun() {
+        let dom = document.getElementById("lineChart");
+        let myChart = echarts.init(dom);
+        let option;
+
+        option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['最高气温', '最低气温']
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} °C'
+                }
+            },
+            series: [{
+                name: '最高气温',
+                type: 'line',
+                data: [10, 11, 13, 11, 12, 12, 9],
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'}
+                    ]
+                },
+                itemStyle: {
+                    color: '#f47a75'
+                }
+            }, {
+                name: '最低气温',
+                type: 'line',
+                data: [1, -2, 2, 5, 3, 2, 0],
+                markPoint: {
+                    data: [
+                        {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
+                    ]
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'},
+                        [{
+                            symbol: 'none',
+                            x: '90%',
+                            yAxis: 'max'
+                        }, {
+                            symbol: 'circle',
+                            label: {
+                                position: 'start',
+                                formatter: '最大值'
+                            },
+                            type: 'max',
+                            name: '最高点'
+                        }]
+                    ]
+                },
+                itemStyle: {
+                    color: '#45c8dc'
+                }
+            }
+            ]
+        };
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+    }
+
+    pieChartFun()
+
+    function pieChartFun() {
+        let dom = document.getElementById("pieChart");
+        let myChart = echarts.init(dom);
+        let option;
+
+        option = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+            },
+            color: ['#0780cf','#f06464','#bd88f5','#f0da49','#71c16f'],
+            series: [
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        {value: 1048, name: '搜索引擎'},
+                        {value: 735, name: '直接访问'},
+                        {value: 580, name: '邮件营销'},
+                        {value: 484, name: '联盟广告'},
+                        {value: 300, name: '视频广告'}
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css"  href="/static/topjui/themes/default/topjui.smartness-blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" src="/static/static/public/js/common.js"></script>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="/static/static/plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/topjui/js/datagrid-scrollview.js"></script>
+</head>
+<body>
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'center',iconCls:'icon-reload',title:'',split:true,border:false">
+        <table data-toggle="topjui-datagrid" data-options="id:'User-datagrid',fitColumns:true,singleSelect:true,selectOnCheck:false,checkOnSelect:false,url:'/{{.RequestApp}}/user/list'">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'编号',sortable:false,width:20,checkbox:true"></th>
+                <th data-options="field:'account',title:'用户名',align:'center',width:30,sortable:false">
+                <th data-options="field:'nickname',title:'昵称',align:'center',width:30,sortable:false"></th>
+                <th data-options="field:'email',title:'Email',align:'center',width:30,sortable:false"></th>
+                <th data-options="field:'create_time',title:'创建时间',align:'center',width:30,sortable:false,
+                formatter:function(value,row,index){
+                    return formatDateTime(value)
+                }"></th>
+                <th data-options="field:'last_login_time',title:'上次登录',align:'center',width:30,sortable:false,
+                formatter:function(value,row,index){
+                    return formatDateTime(value)
+                }"></th>
+                <th data-options="field:'login_count',title:'登录次数',align:'center',width:30,sortable:false"></th>
+                <th data-options="field:'status',title:'状态',align:'center',width:30,sortable:false,
+                    formatter: function(value,row,index){
+						if (value == 1){
+							return '<span style=\'color:green\'>正常</span>';
+						} else if (value == 0) {
+							return '<span style=\'color:red\'>禁用</span>';
+						} else {
+						    return '<span style=\'color:red\'>已删除</span>';
+						}
+                    }"></th>
+                <th data-options="field:'operation',align:'center',title:'操作',width:50,sortable:false,formatter:operateFormatter"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!-- 表格工具栏 -->
+<div id="User-datagrid-toolbar" class="topjui-toolbar" data-options="grid:{type:'datagrid',id:'User-datagrid'}" style="display:none">
+    <form class="search-box" id="roleQueryForm" name="dataForm" method="post">
+        <input id="search_key" name="search_key" data-toggle="topjui-combobox"  data-options="width:80,valueField:'key',textField:'val',data: [{key: 'account',val: '用户名'},{key: 'nickname',val: '昵称','selected':true},{key: 'email',val: '邮箱'}]">
+        <input type="text" name="search_value" id="search_value" data-toggle="topjui-textbox" data-options="id:'search_value',prompt:'搜索值',width:160,value:''">
+        <!--<input type="text" name="userName" id="userName" data-toggle="topjui-textbox" data-options="id:'userName',prompt:'姓名',width:135">-->
+        <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'query',iconCls:'fa fa-search',btnCls:'topjui-btn-red',form:{id:'roleQueryForm'},grid:{type:'datagrid','id':'User-datagrid'}">查询</a>
+        <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'search',extend:'#dfsFileDg-toolbar',btnCls:'topjui-btn-purple'">高级查询</a>
+    </form>
+
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#User-datagrid-toolbar',btnCls:'topjui-btn-green',iconCls:'fa fa-plus',
+           dialog:{
+               id:'UserAddDg',
+               href:'/{{.RequestApp}}/user/add',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/user/add',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">新增</a>
+
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#User-datagrid-toolbar',btnCls:'topjui-btn-blue',component:'edit',iconCls:'fa fa-pencil',
+           dialog:{
+               id:'UserEditDg',
+               href:'/{{.RequestApp}}/user/edit?id={id}',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'更新',url:'/{{.RequestApp}}/user/edit',iconCls:'fa fa-save',handler:'ajaxForm',refresh:[{type:'datagrid',id:'User-datagrid'}]}
+               ]
+           }">编辑</a>
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'doAjax',extend:'#User-datagrid-toolbar',btnCls:'topjui-btn-red',iconCls:'fa fa-trash',
+           grid:{uncheckedMsg:'请先勾选要删除的行',param:'id:id'},
+           url:'/{{.RequestApp}}/user/del'">删除</a>
+</div>
+<script>
+    function operateFormatter(value, row, index) {
+        var htmlstr = '';
+        if (row.status == 1){
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'forbid\',' + row.id + ')">禁用</button>';
+        }else if(row.status == -1){
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'recycle\',' + row.id + ')">恢复</button>';
+        }else{
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'resume\',' + row.id + ')">审核</button>';
+        }
+        htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="resetpassword(\'' + row.id + '\')">重置密码</button>';
+        return htmlstr;
+    }
+    //操作
+    function doAJAX(op,id){
+        var op_str = '';
+        switch (op){
+            case 'forbid':
+                op_str = '禁用';break;
+            case 'recycle':
+                op_str = '恢复';break;
+            case 'resume':
+                op_str = '审核';break;
+        }
+        $.iMessager.confirm('确认对话框', '您确定'+op_str+'所选的数据？', function (r) {
+            if (r) {
+                var postData = {id: id}; // 请求中携带的JSON数据
+                var url = '/{{.RequestApp}}/user/'+op;//请求的地址
+                $.post(url, postData, function (res) {
+                    $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                    if (res.statusCode == 200) {
+                        $("#User-datagrid").iDatagrid('reload');//请求成功后刷新表格
+                    }
+                }, "JSON")
+            }
+        });
+    }
+    function resetpassword(id){
+        var $Dialog = $('<form id="resetpassword"></form>'); // 创建form表单元素
+
+        $Dialog.iDialog({
+            title: '授权',
+            width: 600,
+            height: 400,
+            closed: false,
+            cache: false,
+            href: '/{{.RequestApp}}/user/resetpassword?id=' + id,
+            modal: true,
+            buttons: [{
+                text: '保存',
+                iconCls: 'fa fa-save',
+                btnCls: 'topjui-btn-blue',
+                handler: ajaxSubmit // 调用下面自定义方法ajaxSubmit()
+            }, {
+                text: '关闭',
+                iconCls: 'fa fa-close',
+                btnCls: 'topjui-btn-red',
+                handler: function () {
+                    $Dialog.iDialog('close');
+                }
+            }],
+            onLoad: function () {
+                //加载表单数据
+                $.getJSON('/{{.RequestApp}}/user/resetpassword?id=' + id, function (data) {
+                    $Dialog.form('load', data);
+                });
+            }
+        });
+
+    }
+
+    function ajaxSubmit() {
+        // 1. 显示进度条（提交时请使用进度条 或者 禁用'提交'按钮，防止因为网络延迟用户重复提交）
+        $.iMessager.progress({'text': '请求中……'});
+
+        // 2 提交
+        // 2.1 方式一 上面 $('<form ></form>')
+        if($('#resetpassword').form('validate')) {
+            var formData = $("#resetpassword").serialize();
+            console.log(formData)
+            var url = '/{{.RequestApp}}/user/resetpassword';
+            $.post(url,formData,function (res) {
+                if (res.statusCode == 200) { // 后台返回状态值
+                    $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                    $("#User-datagrid").iDatagrid('reload');// 刷新下表格数据
+                    $('#resetpassword').dialog('destroy');// 销毁dialog面板
+                } else {
+                    $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                }
+                $.iMessager.progress('close');  // 如果提交完成则隐藏进度条
+            },'JSON')
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<div class="topjui-fluid">
+    <input type="hidden" name="id" value="{{.info.Id}}">
+    <br>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">文章标题</label>
+            <div class="topjui-input-block">
+                <input type="text" name="title" data-toggle="topjui-textbox" value="{{.info.Title}}" data-options="required:true">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">推荐属性</label>
+            <div class="topjui-input-block">
+                {{range  $key,$val := .attrlist}}
+                <input data-toggle="topjui-checkbox" name="attrtj" value="{{$val.attrvalue}}" label="{{$val.attrname}}"{{if $val.is_check}} checked{{end}}>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">所属分类</label>
+            <div class="topjui-input-block">
+                <input type="text" name="tid" data-toggle="topjui-combotreegrid" data-options="required:true,
+                    panelWidth:400,
+                    labelPosition:'top',
+                    url:'/{{.RequestApp}}/article/zree?classpid=0',
+                    expandUrl:'/{{.RequestApp}}/article/zree?classpid={classid}',
+                    idField:'classid',
+                    treeField:'classtitle',
+                    columns:[[
+                        {field:'classid',title:'UUID',width:20},
+                        {field:'classtitle',title:'分类名称',width:100}
+                    ]]" value="{{.info.Tid}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">关键字</label>
+            <div class="topjui-input-block">
+                <input type="text" name="keywords" data-toggle="topjui-textbox" value="{{.info.Keywords}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">描述</label>
+            <div class="topjui-input-block">
+                <input type="text" name="description" data-toggle="topjui-textbox" data-options="multiline:true" value="{{.info.Description}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">预览图片</label>
+            <div class="topjui-input-block">
+                <input type="text" name="img" data-toggle="topjui-uploadbox" data-options="editable:false,
+                   buttonText:'上传图片',
+                   accept:'images',
+                   uploadUrl:'/{{.RequestApp}}/article/ajax_upload'" value="{{.info.Img}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'启用','value':1{{if eq .info.Status 1}},'selected':true{{end}}},{'text':'禁用','value':0{{if eq .info.Status 0}},'selected':true{{end}}}]">
+            </div>
+        </div>
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">可见性</label>
+            <div class="topjui-input-block">
+                <input type="text" name="is_login_show" data-toggle="topjui-combobox" data-options="required:true,valueField:'value',panelHeight:'auto',data: [{'text':'登录可见','value':1{{if eq .info.IsLoginShow 1}},'selected':true{{end}}},{'text':'全部可见','value':0{{if eq .info.IsLoginShow 0}},'selected':true{{end}}}]">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">排序</label>
+            <div class="topjui-input-block">
+                <input type="text" name="sort" data-toggle="topjui-textbox" value="{{.info.Sort}}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label"></label>
+            <div class="topjui-input-block">
+                <input data-toggle="topjui-checkbox" name="is_file_down" value="1" label="远程文件本地化" data-options="checked:true,labelWidth:200">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row" >
+        <div class="topjui-col-sm12">
+            <label class="topjui-form-label">内容</label>
+            <div class="topjui-input-block">
+                <textarea name="content" data-toggle="topjui-ueditor" data-options="id:'contentAddEditor',mode:'simple'">{{.info.Content}}</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/static/plugins/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/static/plugins/ueditor/ueditor.all.min.js"></script>

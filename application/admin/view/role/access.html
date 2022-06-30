@@ -1,0 +1,17 @@
+<div class="topjui-fluid">
+    <div id="tree_acc"></div>
+    <input type="hidden" id="tree_acc_role_id" value="{{.id}}">
+</div>
+<script>
+    $("#tree_acc").iTree({
+        url:'/{{.RequestApp}}/role/accesstree?id={{.id}}',
+        checkbox:function(node){
+            if (node.checkbox_checked){
+                return true;
+            }
+            return false;
+        },
+        cascadeCheck:true,
+        onlyLeafCheck:false
+    })
+</script>

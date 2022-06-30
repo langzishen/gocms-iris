@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css"  href="/static/topjui/themes/default/topjui.smartness-blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" src="/static/static/public/js/common.js"></script>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="/static/static/plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/topjui/js/datagrid-scrollview.js"></script>
+</head>
+<body>
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'center',iconCls:'icon-reload',title:'',split:true,border:false">
+        <table data-toggle="topjui-datagrid" data-options="id:'Role-datagrid',fitColumns:true,singleSelect:true,selectOnCheck:false,checkOnSelect:false,url:'/{{.RequestApp}}/role/list'">
+        <thead>
+        <tr>
+            <th data-options="field:'id',title:'编号',sortable:false,width:20,checkbox:true"></th>
+            <th data-options="field:'name',title:'组名',align:'center',width:30,sortable:false">
+            <th data-options="field:'p_name',title:'上级组',align:'center',width:30,sortable:false"></th>
+            <th data-options="field:'status',title:'状态',align:'center',width:30,sortable:false,
+                    formatter: function(value,row,index){
+						if (value == 1){
+							return '<span style=\'color:green\'>正常</span>';
+						} else if (value == 0) {
+							return '<span style=\'color:red\'>禁用</span>';
+						} else {
+						    return '<span style=\'color:red\'>已删除</span>';
+						}
+                    }"></th>
+            <th data-options="field:'operation',align:'center',title:'操作',width:50,sortable:false,formatter:operateFormatter"></th>
+        </tr>
+        </thead>
+    </table>
+    </div>
+</div>
+<!-- 表格工具栏 -->
+<div id="Role-datagrid-toolbar" class="topjui-toolbar" data-options="grid:{type:'datagrid',id:'Role-datagrid'}" style="display:none">
+    <form class="search-box" id="roleQueryForm" name="dataForm" method="post">
+        <input type="text" name="search" id="search_name" data-toggle="topjui-textbox" data-options="id:'search_name',prompt:'组名',width:160,value:''">
+        <!--<input type="text" name="userName" id="userName" data-toggle="topjui-textbox" data-options="id:'userName',prompt:'姓名',width:135">-->
+        <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'query',iconCls:'fa fa-search',btnCls:'topjui-btn-red',form:{id:'roleQueryForm'},grid:{type:'datagrid','id':'Role-datagrid'}">查询</a>
+        <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'search',extend:'#dfsFileDg-toolbar',btnCls:'topjui-btn-purple'">高级查询</a>
+    </form>
+
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#Role-datagrid-toolbar',btnCls:'topjui-btn-green',iconCls:'fa fa-plus',
+           dialog:{
+               id:'RoleAddDg',
+               href:'/{{.RequestApp}}/role/add',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/role/add',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">新增</a>
+
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#Role-datagrid-toolbar',btnCls:'topjui-btn-blue',component:'edit',iconCls:'fa fa-pencil',
+           dialog:{
+               id:'roleEditDg',
+               href:'/{{.RequestApp}}/role/edit?id={id}',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'更新',url:'/{{.RequestApp}}/role/edit',iconCls:'fa fa-save',handler:'ajaxForm',refresh:[{type:'datagrid',id:'Role-datagrid'}]}
+               ]
+           }">编辑</a>
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'doAjax',extend:'#Role-datagrid-toolbar',btnCls:'topjui-btn-red',iconCls:'fa fa-trash',
+           grid:{uncheckedMsg:'请先勾选要删除的行',param:'id:id'},
+           url:'/{{.RequestApp}}/role/del'">删除</a>
+</div>
+<script>
+    function searchOnclick() {
+        var options = $("#Role-datagrid").iDatagrid("options");
+        var queryParams = options.queryParams;console.log(queryParams);
+        $("#Role-datagrid").iDatagrid("reload", $.extend(queryParams, {search: $("#search").val(), nextMarker: ""}))
+    }
+    function operateFormatter(value, row, index) {
+        var htmlstr = '';
+        if (row.status == 1){
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'forbid\',' + row.id + ')">禁用</button>';
+        }else if(row.status == -1){
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'recycle\',' + row.id + ')">恢复</button>';
+        }else{
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'resume\',' + row.id + ')">审核</button>';
+        }
+        /**
+        htmlstr += `<a href="javascript:void(0)" class="layui-btn layui-btn-xs layui-btn-danger" data-toggle="topjui-menubutton" data-options="method:'openDialog',
+           dialog:{
+               id:'RoleAddDg',
+               href:'/{{.RequestApp}}/role/access?id=`+ row.id +`',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/role/access',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">授权</a>`;**/
+        htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="accesstree(\'' + row.id + '\')">授权</button>';
+        htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="dataaccess(\'' + row.id + '\')">数据授权</button>';
+        htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="role_user(\'' + row.id + '\')">成员列表</button>';
+        return htmlstr;
+    }
+    //操作
+    function doAJAX(op,id){
+        var op_str = '';
+        switch (op){
+            case 'forbid':
+                op_str = '禁用';break;
+            case 'recycle':
+                op_str = '恢复';break;
+            case 'resume':
+                op_str = '审核';break;
+        }
+        $.iMessager.confirm('确认对话框', '您确定'+op_str+'所选的数据？', function (r) {
+            if (r) {
+                var postData = {id: id}; // 请求中携带的JSON数据
+                var url = '/{{.RequestApp}}/role/'+op;//请求的地址
+                $.post(url, postData, function (res) {
+                    $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                    if (res.statusCode == 200) {
+                        $("#Role-datagrid").iDatagrid('reload');//请求成功后刷新表格
+                    }
+                }, "JSON")
+            }
+        });
+    }
+    function accesstree(id){
+        var $accessDialog = $('<form id="accesstree"></form>'); // 创建form表单元素
+
+        $accessDialog.iDialog({
+            title: '授权',
+            width: 600,
+            height: 400,
+            closed: false,
+            cache: false,
+            href: '/{{.RequestApp}}/role/access?id=' + id,
+            modal: true,
+            buttons: [{
+                text: '保存',
+                iconCls: 'fa fa-save',
+                btnCls: 'topjui-btn-blue',
+                handler: ajaxSubmit // 调用下面自定义方法ajaxSubmit()
+            }, {
+                text: '关闭',
+                iconCls: 'fa fa-close',
+                btnCls: 'topjui-btn-red',
+                handler: function () {
+                    $accessDialog.iDialog('close');
+                }
+            }],
+            onLoad: function () {
+                //加载表单数据
+                $.getJSON('/{{.RequestApp}}/role/access?id=' + id, function (data) {
+                    $accessDialog.form('load', data);
+                });
+            }
+        });
+
+    }
+
+    function dataaccess(id){
+        var $dataaccessDg = $('<div id="dataaccessDg"></div>');
+        $dataaccessDg.iDialog({
+            title: '数据授权',
+            width: 1000,
+            height: 600,
+            closed: false,
+            cache: false,
+            href: '/{{.RequestApp}}/role/dataaccess?role_id=' + id,
+            modal: true
+        });
+    }
+
+    function role_user(id){
+        var $role_userDialog = $('<form id="role_user"></form>'); // 创建form表单元素
+
+        $role_userDialog.iDialog({
+            title: '成员列表',
+            width: 600,
+            height: 400,
+            closed: false,
+            cache: false,
+            href: '/{{.RequestApp}}/role/roleuser?id=' + id,
+            modal: true,
+            buttons: [{
+                text: '保存',
+                iconCls: 'fa fa-save',
+                btnCls: 'topjui-btn-blue',
+                handler: ajaxSubmit2 // 调用下面自定义方法ajaxSubmit()
+            }, {
+                text: '关闭',
+                iconCls: 'fa fa-close',
+                btnCls: 'topjui-btn-red',
+                handler: function () {
+                    $role_userDialog.iDialog('close');
+                }
+            }],
+            onLoad: function () {
+                //加载表单数据
+                $.getJSON('/{{.RequestApp}}/role/roleuser?id=' + id, function (data) {
+                    $role_userDialog.form('load', data);
+                });
+            }
+        });
+
+    }
+
+    function ajaxSubmit() {
+        // 1. 显示进度条（提交时请使用进度条 或者 禁用'提交'按钮，防止因为网络延迟用户重复提交）
+        $.iMessager.progress({'text': '请求中……'});
+
+        // 2. 提交操作
+        $('#accesstree').iForm('submit', {
+            url: '/{{.RequestApp}}/role/doaccess',
+            onSubmit: function (param) {  /* param.p1 = 'param 用于提交额外的参数';*/
+                var Checked_node= $("#tree_acc").iTree('getChecked');
+                console.log(Checked_node);
+                var node_json = [];
+                for (var i=0;i<Object.keys(Checked_node).length;i++){
+                    node_json[i] = {"node_id":Checked_node[i].id,"pid":Checked_node[i].pid,"level":Checked_node[i].level}
+                    if (Checked_node[i].children){
+                        for (var ii=0;ii<Object.keys(Checked_node[i].children).length;ii++){
+                            node_json[i+ii] = {"node_id":Checked_node[i].children[ii].id,"pid":Checked_node[i].children[ii].pid,"level":Checked_node[i].children[ii].level}
+                        }
+                    }
+                }
+                console.log(node_json);
+                param.node_ids_json = JSON.stringify(node_json);
+                param.role_id = $("#tree_acc_role_id").val();
+                var isValid = $(this).iForm('validate'); //  提交数据表单数据时进行表单验证
+                if (!isValid) {
+                    $.iMessager.progress('close');  // 如果表单是无效的则隐藏进度条
+                }
+                return isValid;    // 返回false终止表单提交
+            },
+            success: function (res) {
+                var data = JSON.parse(res); // 字符串格式JSON 转换成 对象格式JSON
+                setTimeout(function () { // 模拟请求延迟3秒（使用的时候请自行去掉）
+                    if (data.statusCode == 200) { // 后台返回状态值
+                        $.iMessager.show({title: '我的消息', msg: data.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                        $("#Role-datagrid").iDatagrid('reload');// 刷新下表格数据
+                        $('#accesstree').dialog('destroy');// 销毁dialog面板
+                    } else {
+                        $.iMessager.show({title: '我的消息', msg: data.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                    }
+                    $.iMessager.progress('close');  // 如果提交完成则隐藏进度条
+                }, 3000);
+            }
+        });
+    }
+
+    function ajaxSubmit2() {
+        // 1. 显示进度条（提交时请使用进度条 或者 禁用'提交'按钮，防止因为网络延迟用户重复提交）
+        $.iMessager.progress({'text': '请求中……'});
+
+        // 2 提交
+        // 2.1 方式一 上面 $('<form ></form>')
+        if($('#role_user').form('validate')) {
+            var formData = $("#role_user").serialize();
+            var url = '/{{.RequestApp}}/role/roleuser';
+            $.post(url,formData,function (res) {
+                if (res.statusCode == 200) { // 后台返回状态值
+                    $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                    $("#Role-datagrid").iDatagrid('reload');// 刷新下表格数据
+                    $('#role_user').dialog('destroy');// 销毁dialog面板
+                } else {
+                    $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                }
+                $.iMessager.progress('close');  // 如果提交完成则隐藏进度条
+            },'JSON')
+        }
+    }
+</script>
+</body>
+</html>

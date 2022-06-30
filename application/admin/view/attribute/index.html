@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="/static/topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css"  href="/static/topjui/themes/default/topjui.smartness-blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="/static/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="/static/static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" src="/static/topjui/js/topjui.core.min.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="/static/topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" src="/static/static/public/js/common.js"></script>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="/static/static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="/static/static/plugins/layui/layui.js"></script>
+</head>
+<body>
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'west',title:'模型',split:true,border:false,width:'30%',iconCls:'fa fa-book',headerCls:'border_right',bodyCls:'border_right'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'Model-edatagrid',
+                    url:'/{{.RequestApp}}/attribute/list',
+                    childGrid:{
+                        param:'ename:model_ename',
+                        grid:[
+                            {type:'datagrid',id:'ModelSet-edatagrid'}
+                        ]
+                    }">
+            <thead>
+            <tr>
+                <th data-options="field:'model_ename',title:'模型名称',align:'center'"></th>
+                <th data-options="field:'operation',title:'操作',align:'center'"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div data-options="region:'center',iconCls:'fa fa-book',title:'所属模型',width:'70%',split:true,border:false,bodyCls:'border_left'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-edatagrid"
+               data-options="id:'ModelSet-edatagrid',
+                    idField:'id',
+                    reloadAfterSave:true,
+                    selectOnCheck:true,
+			        checkOnSelect:true,
+			        reloadAfterSave:true,
+                    url:'/{{.RequestApp}}/attribute/list?ename={parent.model_ename}',
+                    saveUrl:'/{{.RequestApp}}/attribute/add?ename={parent.model_ename}',
+                    updateUrl:'/{{.RequestApp}}/attribute/edit?ename={parent.model_ename}',
+                    destroyUrl:'/{{.RequestApp}}/attribute/forever_del'">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'编号',checkbox:true"></th>
+                <th data-options="field:'attrname',title:'属性名称',editor:{type:'textbox',options:{required:true}}"></th>
+                <th data-options="field:'attrvalue',title:'属性值',editor:{type:'textbox',options:{required:true}}"></th>
+                <th data-options="field:'status',title:'状态',width:100,
+                    formatter: function(value,row,index){
+						if (value == 1){
+							return '<span style=\'color:green\'>启用</span>';
+						} else if (value == 0) {
+							return '<span style=\'color:red\'>禁用</span>';
+						} else if(value == -1){
+						    return '<span style=\'color:red\'>已删除</span>';
+						}else{
+						    return '';
+						}
+                    }"></th>
+                <th data-options="field:'operation',title:'操作',align:'center',formatter:operateFormatter"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div id="Model-edatagrid-toolbar" class="topjui-toolbar" data-options="
+       grid:{
+           type:'edatagrid',
+           id:'Model-edatagrid'
+       }" style="display:none">
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',extend:'#Model-edatagrid-toolbar',btnCls:'topjui-btn-green',iconCls:'fa fa-plus',
+            dialog:{
+               id:'AttributeDgAdd',
+               href:'/{{.RequestApp}}/attribute/add',
+               width:600,
+               height:400,
+               buttonsGroup:[
+                   {text:'保存',url:'/{{.RequestApp}}/attribute/add',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">新增</a>
+</div>
+<div id="ModelSet-edatagrid-toolbar" class="topjui-toolbar" data-options="
+       grid:{
+           type:'edatagrid',
+           id:'ModelSet-edatagrid'
+       },parentGrid:{
+           type:'datagrid',
+           id:'Model-edatagrid'
+       }" style="display:none">
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'edatagrid',extend:'#ModelSet-edatagrid-toolbar',btnCls:'topjui-btn-green',iconCls:'fa fa-plus',type:'addRow'">新增</a>
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'edatagrid',extend:'#ModelSet-edatagrid-toolbar',type:'saveRow',iconCls:'fa fa-save',btnCls:'topjui-btn-blue'">保存</a>
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'edatagrid',extend:'#ModelSet-edatagrid-toolbar',type:'cancelRow',iconCls:'fa fa-close',btnCls:'topjui-btn-black'">取消</a>
+    <a href="javascript:void(0)" data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+           extend:'#ModelSet-edatagrid-toolbar',
+           btnCls:'topjui-btn-red',
+           iconCls:'fa fa-trash',
+           grid:{uncheckedMsg:'请先勾选要删除的行',param:'id:id'},
+           url:'/{{.RequestApp}}/attribute/forever_del'">删除</a>
+</div>
+
+<script type="application/javascript">
+    function operateFormatter(value, row, index) {
+        var htmlstr = '';
+        if (row.status == 1){
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'forbid\',' + row.id + ')">禁用</button>';
+        }else if(row.status == -1){
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'recycle\',' + row.id + ')">恢复</button>';
+        }else{
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'resume\',' + row.id + ')">审核</button>';
+        }
+        return htmlstr;
+    }
+    //操作
+    function doAJAX(op,id){
+        var op_str = '';
+        switch (op){
+            case 'forbid':
+                op_str = '禁用';break;
+            case 'recycle':
+                op_str = '恢复';break;
+            case 'resume':
+                op_str = '审核';break;
+        }
+        $.iMessager.confirm('确认对话框', '您确定'+op_str+'所选的数据？', function (r) {
+            if (r) {
+                var postData = {id: id}; // 请求中携带的JSON数据
+                var url = '/{{.RequestApp}}/attribute/'+op;//请求的地址
+                $.post(url, postData, function (res) {
+                    $.iMessager.show({title: '我的消息', msg: res.message, timeout: 5000, showType: 'slide'});// '消息窗口'组件
+                    if (res.statusCode == 200) {
+                        $("#Model-datagrid").iDatagrid('reload');//请求成功后刷新表格
+                        $("#ModelSet-datagrid").iDatagrid('reload');//请求成功后刷新表格
+                    }
+                }, "JSON")
+            }
+        });
+    }
+</script>
+</body>
+</html>

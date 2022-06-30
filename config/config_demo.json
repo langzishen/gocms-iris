@@ -1,0 +1,80 @@
+{
+  "app_name": "#$#app_name#$#",
+  "app_protocol": "#$#app_protocol#$#",
+  "app_url": "#$#app_url#$#",
+  "app_url_port": #$#app_url_port#$#,
+  "site_keywords": "#$#site_keywords#$#",
+  "site_description": "#$#site_description#$#",
+  "app_author_email": "#$#app_author_email#$#",
+  "offline_message": "#$#offline_message#$#",
+  "site_icp_num": "#$#site_icp_num#$#",
+  "app_version": "#$#app_version#$#",
+  "db": {
+    "host": "#$#host#$#",
+    "port": #$#port#$#,
+    "database": "#$#database#$#",
+    "user": "#$#user#$#",
+    "password": "#$#password#$#"
+  },
+  "upload": {
+    "file_upload_type": "#$#file_upload_type#$#",
+    "upload_type_config": {
+      "max_size": #$#max_size#$#,
+      "root_path": "#$#root_path#$#",
+      "region_id": "#$#region_id#$#",
+      "access_key_id": "#$#access_key_id#$#",
+      "access_key_secret": "#$#access_key_secret#$#",
+      "bucket": "#$#bucket#$#",
+      "endpoint": "#$#endpoint#$#",
+      "request_uri": "#$#request_uri#$#",
+      "request_url": "#$#request_url#$#"
+    }
+  },
+  "admin": {
+    "menu": {
+      "content": {
+        "icons": "fa fa-cc-amex",
+        "title": "工作台"
+      },
+      "framework": {
+        "icons": "fa fa-sitemap",
+        "title": "组织架构"
+      },
+      "groupuser": {
+        "icons": "fa fa-users",
+        "title": "用户与组"
+      },
+      "developers": {
+        "icons": "fa fa-wrench",
+        "title": "开发者中心"
+      },
+      "system": {
+        "icons": "fa fa-cog",
+        "title": "系统管理"
+      },
+      "plugin": {
+        "icons": "fa fa-rocket",
+        "title": "插件管理"
+      }
+    }
+  },
+  "rbac": {
+    "table_access": "#$#table_access#$#",
+    "table_user": "#$#table_user#$#",
+    "table_role": "#$#table_role#$#",
+    "table_role_user": "#$#table_role_user#$#",
+    "table_node": "#$#table_node#$#",
+    "user_auth_type": #$#user_auth_type#$#,
+    "user_auth_key": "#$#user_auth_key#$#",
+    "admin_auth_key": "#$#admin_auth_key#$#",
+    "require_auth_controller": "#$#require_auth_controller#$#",
+    "no_auth_controller": "#$#no_auth_controller#$#",
+    "require_auth_action": "#$#require_auth_action#$#",
+    "no_auth_action": "#$#no_auth_action#$#"
+  },
+  "data_access": {
+    "is_open": #$#data_access_open#$#,
+    "controllers": "#$#controllers#$#",
+    "table_field": "#$#table_field#$#"
+  }
+}

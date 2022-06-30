@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" href="../../topjui/themes/default/topjui.core.min.css" rel="stylesheet">
+    <link type="text/css" href="../../topjui/themes/default/topjui.blue.css" rel="stylesheet" id="dynamicTheme"/>
+    <link type="text/css" href="../../static/public/css/mobile.css" rel="stylesheet"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" href="../../static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- layui框架样式 -->
+    <link type="text/css" href="../../static/plugins/layui/css/layui.css" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" src="../../static/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../../static/plugins/jquery/jquery.cookie.js"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" src="../../static/public/js/topjui.config.js"></script>
+    <!-- TopJUI框架核心-->
+    <script type="text/javascript" src="../../topjui/js/topjui.core.min.js"></script>
+    <script type="text/javascript" src="../../static/public/js/jquery.easyui.mobile.js"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" src="../../topjui/js/locale/topjui.lang.zh_CN.js"></script>
+    <!-- layui框架js -->
+    <script type="text/javascript" src="../../static/plugins/layui/layui.js" charset="utf-8"></script>
+</head>
+
+<body>
+<div class="easyui-navpanel">
+    <header>
+        <div class="m-toolbar">
+            <div class="m-title">TextBox</div>
+        </div>
+    </header>
+    <ul class="m-list">
+        <li>
+            <input data-toggle="topjui-textbox" style="width:100%" data-options="
+                        label: 'Standard TextBox:',
+                        labelPosition: 'top',
+                        prompt: 'Search...'
+                        ">
+        </li>
+        <li>
+            <input data-toggle="topjui-textbox" style="width:100%" data-options="
+                        label: 'Icon:',
+                        labelPosition: 'top',
+                        iconCls: 'icon-search'
+                        ">
+        </li>
+        <li>
+            <input data-toggle="topjui-textbox" style="width:100%" data-options="
+                        label: 'Button:',
+                        labelPosition: 'top',
+                        buttonText: 'Search'
+                        ">
+        </li>
+    </ul>
+
+</div>
+</body>
+</html>

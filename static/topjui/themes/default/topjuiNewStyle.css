@@ -1,0 +1,669 @@
+/*表格复选框样式*/
+input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 16px;
+    position: relative;
+    cursor: pointer;
+    background-color: #1890ff;
+    color: white;
+    border: 1px solid #d9d9d9;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+input[type="checkbox"]:checked::before {
+    font-family: "FontAwesome";
+    content: "\f00c"; /*\2713*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #1890ff;
+    border-radius: 2px;
+    border: 1px solid #1890FF;
+}
+
+input[type="checkbox"]:hover::before {
+    border: 1px solid #1890FF;
+}
+
+.datagrid-cell-check, .datagrid-header-check {
+    width: 60px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*topjui-checkbox 样式*/
+.checkbox, .radiobutton {
+    border: .5px solid #d9d9d9;
+    cursor: pointer;
+}
+
+.checkbox-checked, .radiobutton-inner {
+    background-color: #1890ff;
+}
+
+/*对话框样式*/
+.window {
+    border-width: 0 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15) !important;
+}
+
+.window-shadow {
+    box-shadow: none;
+}
+
+.window .window-header {
+    border-color: #e7eaec;
+    background: white;
+}
+
+.dialog-button, .dialog-toolbar {
+    background: white;
+}
+
+/*表格窗口样式*/
+.panel-header {
+    background: white;
+}
+
+.datagrid-header-row {
+    background: white;
+}
+
+.datagrid-header, .datagrid-td-rownumber {
+    background: white;
+}
+
+/*下拉菜单样式*/
+.menu {
+    background-color: white;
+    border-color: white;
+    /*padding: 0;*/
+    border-radius: 4px;
+}
+
+.menu-shadow{
+    -moz-box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+
+.menu-active {
+    border-color: #FAFAFA;
+    border-radius: 0px;
+}
+
+.accordion .accordion-header-selected { /*手风琴*/
+    background: #1890FF;
+}
+
+.menu .menu-item,.menu .menu-text {
+    display: flex;
+    height: 37px !important;
+    line-height: 37px !important;
+    font-size: 14px;
+}
+
+.menu-icon[class*='tree-checkbox']{
+    position: absolute;
+}
+
+.menu-icon{
+    display: flex !important;
+    align-items: center;
+}
+
+.sidemenu .tree-node-selected { /*侧滑菜单*/
+    border-right: 0;
+    background: #1890FF;
+}
+
+/*数据表格样式*/
+.datagrid-body td, .datagrid-footer td, .datagrid-header td {
+    border-color: #e8e8e8;
+    border-style: solid;
+    /*color: rgba(0, 0, 0, .65);*/
+}
+
+.datagrid-body tr, .datagrid-footer tr, .datagrid-header tr{
+    color: rgba(0, 0, 0, .65);
+}
+
+.datagrid-header-row td, .datagrid-header-inner {
+    background-color: #FAFAFA;
+    height: 40px;
+    font-size: 14px !important;
+}
+
+.datagrid-header-row td .datagrid-cell {
+    height: 100% !important;
+    display: flex;
+}
+
+.datagrid-header-row td .datagrid-cell span {
+    display: flex;
+    align-items: center;
+    margin: auto;
+}
+
+.datagrid-header-row, .datagrid-row {
+    height: 37px;
+}
+
+.tree-collapsed, .tree-expanded {
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    line-height: 14px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 2px;
+    outline: none;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.tree-collapsed:hover, .tree-expanded:hover, .tree-collapsed:focus, .tree-expanded:focus {
+    border: 1px solid #1890FF;
+}
+
+.tree-collapsed:after {
+    content: "+";
+    padding-left: 1px;
+}
+
+.tree-expanded:after {
+    content: "-";
+    padding-left: 1px;
+}
+
+.datagrid-td-rownumber .datagrid-cell-rownumber {
+    color: rgba(0, 0, 0, .65) !important;
+}
+
+.progressbar-text{ /* 进度条 */
+    z-index: 10;
+}
+
+.progressbar{
+    border-width: .1px;
+}
+
+.datagrid-cell, .datagrid-cell-group, .datagrid-cell-rownumber, .datagrid-header-rownumber {
+    line-height: 20px !important;
+}
+
+/*主tab栏样式*/
+.tabs-header, .tabs-tool {
+    background-color: white !important;
+}
+
+.tabs li.tabs-selected a.tabs-inner {
+    background: white;
+    height: 34px !important;
+}
+
+.tabs li.tabs-selected a.tabs-inner .tabs-icon{
+    margin-top: -7px !important;
+}
+
+.tabs li a.tabs-inner {
+    background: #fafafa;
+    border: 0;
+}
+
+.tabs li{
+    margin: 0;
+}
+
+.tabs li a.tabs-inner {
+    background: white;
+}
+
+.tabs a{
+    height: 33px !important;
+    line-height: 33px !important;
+}
+
+.tabs li a.tabs-inner:hover{
+    background: none;
+    color: #1890ff;
+}
+
+/*表格工具栏*/
+.datagrid-pager, .datagrid-row-alt, .datagrid-toolbar {
+    background: white !important;
+}
+
+.search-box{
+    padding: 0;
+}
+
+/*.datagrid-toolbar*/
+.l-btn {
+    height: 32px !important;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.datagrid-toolbar .l-btn .l-btn-text {
+    line-height: 30px !important;
+}
+
+.datagrid-toolbar{
+    /*border: none;*/
+}
+
+/*表格鼠标事件样式*/
+.datagrid-row-over, .datagrid-row-selected {
+    background: #fafafa !important;
+}
+
+/*分页*/
+
+.datagrid-pager.pagination{
+    height: 37px;
+}
+
+.datagrid-pager.pagination table,.datagrid-pager.pagination .pagination-info{
+    height: 100%;
+    line-height: 37px;
+    font-size: 14px;
+}
+
+.datagrid-pager.pagination table td span,.datagrid-pager.pagination table td [class*="pagination"]{
+    font-size: 14px !important;
+}
+
+.datagrid-pager.pagination .l-btn-icon{
+    margin-top: -8px !important;
+}
+
+/*底部工具栏*/
+.panel-footer {
+    background: white;
+    height: 40px !important;
+    padding-top: 4px !important;
+}
+
+/*左侧菜单样式*/
+
+#RightAccordion {
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+#west .tree .tree-node {
+    margin-top: 6px;
+}
+
+#west .panel-icon{
+    display: flex;
+    align-items: center;
+}
+
+#west .tree-hit{
+    margin-top: 10px;
+}
+
+#west .panel-title{
+    height: 31px;
+    line-height: 31px;
+}
+
+#west .panel-icon, .panel-tool{
+    margin-top: -8px;
+}
+
+.banner {
+    height: 54px !important;
+}
+
+.banner .webname {
+    width: 260px;
+    padding-left: 0 !important;
+    text-align: center !important;
+}
+
+#west .panel-tool a:hover{
+    background-color: rgba(0,0,0,0);
+}
+
+/*按钮样式*/
+.topjui-btn-blue {
+    background: #1890FF;
+}
+
+.topjui-btn-red {
+    background: #FF4D4F;
+}
+
+.topjui-btn-purple {
+    background: #B602B6;
+}
+
+.topjui-btn-black {
+    background: #000C17;
+}
+
+.textbox-button {
+    background: #fafafa;
+}
+
+.l-btn {
+    outline: none;
+    user-select: none;
+}
+
+.l-btn-left.l-btn-icon-left{
+    height: 100%;
+}
+
+.l-btn-left {
+    margin-top: 0 !important;
+}
+
+.l-btn span .l-btn-icon :before{
+    background: red;
+}
+
+.panel .l-btn-icon, .l-btn-icon, .tabs-icon{
+    margin-top: -6px !important;
+}
+
+.l-btn .l-btn-text {
+    line-height: 32px !important;
+    white-space: nowrap;
+}
+
+.window .window-body .l-btn .l-btn-text{
+    line-height: 30px !important;
+}
+
+.messager-button .l-btn{
+    width: auto;
+}
+
+.nav-right .l-btn-plain:hover{
+    background: none;
+}
+
+.l-btn-plain:hover{
+    border-radius: 4px;
+}
+
+.nav-right .m-btn-plain-active,.nav-right .s-btn-plain-active{
+    background:none;
+}
+
+.menu>a[class*='l-btn']{
+    width: 100%;
+    text-align: left;
+}
+
+/*输入框样式*/
+.textbox input,.textbox textarea,.datagrid-filter-c input {
+    text-indent: 6px !important;
+}
+
+.topjui-input-block {
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    padding-top: 0 !important;
+}
+
+.textbox {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    height: auto !important;
+}
+
+.textbox input {
+    height: 30px !important;
+}
+
+.datagrid-filter-c>input{
+    height: 32px !important;
+}
+
+.datagrid-filter-c>input:hover,.datagrid-editable-input:hover{
+    border-color: #40a9ff !important;
+}
+
+.datagrid-filter-c>input:focus,.datagrid-editable-input:focus{
+    border-color: #40a9ff;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, .2);
+}
+
+.topjui-form-label {
+    padding: 0;
+    line-height: 32px;
+}
+
+.textbox:hover {
+    border-color: #40a9ff;
+    outline: 0;
+}
+
+.textbox-focused {
+    border-color: #40a9ff;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, .2)
+}
+
+.validatebox-invalid {
+    background-color: white;
+}
+
+.textbox-invalid {
+    background-color: white;
+    border: 1px solid #ffa8a8;
+}
+
+.textbox-invalid:hover {
+    border: 1px solid #ffa8a8;
+}
+
+.textbox-invalid:focus-within {
+    box-shadow: 0 0 0 2px rgba(245, 34, 45, .2);
+}
+
+.textbox textarea.textbox-text {
+    padding: 4px;
+    height: 110px !important;
+}
+
+.spinner-arrow.spinner-button-bottom, .spinner-arrow.spinner-button-left, .spinner-arrow.spinner-button-right, .spinner-arrow.spinner-button-top {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/*下拉框样式*/
+.combo-panel .tree-node {
+    margin-top: 6px;
+    transition: all .3s;
+}
+
+.combobox-item-hover, .tree-node-hover {
+    background-color: #e2e2e2;
+}
+
+.combobox-item-selected {
+    background-color: #e2e2e2;
+    color: black;
+    font-weight: bold;
+}
+
+.combo-panel .combobox-item {
+    padding: 8px 4px;
+    cursor: pointer;
+}
+
+.tree li .tree-collapsed, .tree li .tree-expanded {
+    margin-left: 8px;
+}
+
+.combo-arrow { /*下拉箭头*/
+    background-color: rgba(0, 0, 0, 0);
+    height: 30px !important;
+}
+
+.tree-node-selected {
+    background-color: #e2e2e2;
+}
+
+/*开关*/
+.switchbutton {
+    border: 1px solid #d9d9d9;
+}
+
+.switchbutton-off {
+    background: #BFBFBF;
+}
+
+/*还原菜单栏下拉伸缩图标样式（树形表格之类的伸缩图标样式更改会影响菜单栏的样式）*/
+
+#RightAccordion .tree-collapsed, #RightAccordion .tree-expanded {
+    border: 0;
+    border-radius: 0;
+    margin-left: 0 !important;
+    margin-right: 5px !important;
+    width: 20px;
+    height: 18px;
+}
+
+#RightAccordion .tree-collapsed:hover, #RightAccordion .tree-expanded:hover {
+    border: 0;
+}
+
+#RightAccordion .tree-collapsed:after, #RightAccordion .tree-expanded:after {
+    content: "";
+    padding: 0;
+}
+
+/*分割线*/
+.layout-split-west {
+    border-right: 5px solid #fafafa;
+}
+
+.layout-split-east {
+    border-left: 5px solid #fafafa;
+}
+
+/*字体*/
+#ie6-warning, .calendar table td, .calendar table th, .calendar-title span, .combobox-item, .datagrid-cell, .datagrid-cell-group, .datagrid-cell-rownumber, .datagrid-header .datagrid-cell span, .datagrid-header-rownumber, .datebox-button a, .editTable .divider span, .editTable .label, .menu-text, .panel-title, .progressbar-text, .textbox, .textbox .textbox-text, .textbox-label.textbox-label-after, .topjui-form-label, .tree-title, fieldset legend, table td {
+    font-size: 14px !important;
+}
+
+.datagrid-cell .fa{
+    font-size: 12px !important;
+}
+
+.calendar-menu-month, .calendar-menu-year, .combobox-group, .combobox-stick, .datebox-button a, .panel-title, .propertygrid .datagrid-group span {
+    font-weight: 100 !important;
+}
+
+/*树组件*/
+.tree-checkbox0,.tree-checkbox1,.tree-checkbox2{
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 2px;
+    outline: none;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    user-select: none;
+    position: relative;
+    box-sizing: border-box;
+    font-size: 6px;
+}
+
+.tree-checkbox1{
+    background-color: #1890ff;
+    border-color: #1890ff;
+}
+
+.tree-checkbox1:after {
+    font-family: "FontAwesome";
+    content: "\f00c";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    color: white;
+}
+
+.tree-node{
+    height: 36px;
+    line-height: 36px;
+}
+
+.tree-checkbox2:after{
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #1890ff;
+    left: 2px;
+    top: 2px;
+}
+
+/*layui输入框样式*/
+.layui-input{
+    border-radius: 4px !important;
+    border: 1px solid #d9d9d9 !important;
+    font-size: 14px !important;
+    height: 32px !important;
+}
+.layui-input:hover{
+    border-color: #40a9ff !important;
+    outline: 0 !important;
+}
+.layui-input:focus{
+    border-color: #40a9ff !important;
+    box-shadow: 0 0 0 2px rgba(24,144,255,.2) !important;
+    outline: 0 !important;
+}
+
+/*菜单折叠面板展示宽度*/
+.tooltip-right .accordion{
+    width: 220px !important;
+}
+
+
+
