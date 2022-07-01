@@ -120,7 +120,7 @@
         <div class="login-title text-center">
             <span class="flag"><i class="fa fa-user"></i> 用户登陆</span>
             <h1>
-                <small>GoCrm管理系统</small>
+                <small>GoCMS管理系统</small>
             </h1>
         </div>
         <div class="login-content ">
@@ -150,7 +150,7 @@
                                 <input type="text" id="captcha" name="captcha" class="form-control" placeholder="验证码" value="" style="width: 180px">
                             </div>
                             <div class="input-group" style="float: right;width: 140px;height: 40px">
-                                <img src="/{{.RequestApp}}/public/captcha" onclick="this.src='/{{.RequestApp}}/public/captcha?' + Math.random()*10000000000;" alt="点击刷新验证码">
+                                <img id="captcha_img" src="/{{.RequestApp}}/public/captcha" onclick="this.src='/{{.RequestApp}}/public/captcha?' + Math.random()*10000000000;" alt="点击刷新验证码">
                             </div>
                             <div style="clear: both"></div>
                         </div>
@@ -226,6 +226,7 @@
                 var formData = {
                     account: $('#account').val(),
                     password: $('#password').val(),
+                    captcha: $('#captcha').val(),
                     referer: $('#referer').val()
                 };
                 $.ajax({
@@ -238,8 +239,9 @@
                             //location.href = '/system/index/index?portal=${portal}';
                             location.href = data.referer;
                         } else {
+                            $("#captcha_img").trigger("click");
+                            $("#model_span_err").html("<i class=\"fa fa-warning\"></i> "+data.msg+"，请重试！")
                             $('#myModal').modal();
-                            $("#model_span_err").val("<i class=\"fa fa-warning\"></i> "+data.msg+"，请重试！")
                             //alert("用户名或密码错误！");
                         }
                     },

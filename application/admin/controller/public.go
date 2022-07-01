@@ -9,6 +9,7 @@ import (
 	"gocms/application/extend/captcha"
 	"gocms/application/model"
 	"gocms/config"
+	"strings"
 )
 
 type PublicController struct {
@@ -25,27 +26,40 @@ func (_ *PublicController) GetLogin(ctx iris.Context) {
 
 func (pc *PublicController) PostLoginin(ctx iris.Context) {
 	if ctx.IsAjax() {
-		data := make(map[string]string)
+		data := make(map[string]interface{})
 		ctx.ReadJSON(&data)
 		if "" == data["account"] {
-			ctx.JSON(map[string]string{"code": "403", "msg": "账号必填!", "data": "", "referer": "/" + RequestApp + "/index/index"})
+			ctx.JSON(map[string]interface{}{"code": 403, "msg": "账号必填!", "data": "", "referer": "/" + RequestApp + "/index/index"})
 		}
 		if "" == data["password"] {
-			ctx.JSON(map[string]string{"code": "403", "msg": "账号必填!", "data": "", "referer": "/" + RequestApp + "/index/index"})
+			ctx.JSON(map[string]interface{}{"code": 403, "msg": "账号必填!", "data": "", "referer": "/" + RequestApp + "/index/index"})
+		}
+		if "" == data["captcha"].(string) {
+			ctx.JSON(map[string]interface{}{"code": 403, "msg": "请输入验证码!", "data": "", "referer": "/" + RequestApp + "/index/index"})
+		}
+		sess := app_session.Sess.Start(ctx)
+		code := sess.GetString("admin_login_captcha")
+		if code != "" {
+			if strings.ToUpper(code) != strings.ToUpper(data["captcha"].(string)) {
+				//ctx.JSON(map[string]interface{}{"code": 403, "msg": "验证码不正确!", "data": "", "referer": "/" + RequestApp + "/public/login"})
+				//ctx.StopExecution()
+				//测试时不做验证码验证
+				//return
+			}
 		}
 
 		where_map := make(map[string]interface{})
 		where_map["account"] = data["account"]
 		if isOk, userInfo := new(rbac.RBAC).Authenticate(where_map); !isOk {
-			ctx.JSON(map[string]string{"code": "403", "msg": "帐号不存在或已禁用！", "data": "", "referer": ""})
+			ctx.JSON(map[string]interface{}{"code": 403, "msg": "帐号不存在或已禁用！", "data": "", "referer": ""})
 		} else {
-			if fmt.Sprintf("%x", md5.Sum([]byte(data["password"]))) != userInfo.Password {
-				ctx.JSON(map[string]string{"code": "403", "msg": "用户名和密码不正确！", "data": "", "referer": ""})
+			if fmt.Sprintf("%x", md5.Sum([]byte(data["password"].(string)))) != userInfo.Password {
+				ctx.JSON(map[string]interface{}{"code": 403, "msg": "用户名和密码不正确！", "data": "", "referer": ""})
 			} else {
 				pc.saveLoginSession(ctx, userInfo)              // 设置后台的SESSION
 				pc.setLoginLog("boss", userInfo.Id)             // 保存登录信息
 				new(rbac.RBAC).SaveAccessList(ctx, userInfo.Id) // 缓存访问权限
-				ctx.JSON(map[string]string{"code": "200", "msg": "", "data": "", "referer": "/" + RequestApp + "/index/index"})
+				ctx.JSON(map[string]interface{}{"code": 200, "msg": "", "data": "", "referer": "/" + RequestApp + "/index/index"})
 			}
 		}
 	} else {
