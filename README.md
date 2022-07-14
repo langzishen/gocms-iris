@@ -23,3 +23,8 @@ gocms是go语言实现的一套cms内容管理系统,服务端使用go语言,主
 * github.com/go-sql-driver/mysql
 * gorm.io/gorm
 * github.com/aliyun/aliyun-oss-go-sdk
+
+
+
+#### 安装问题：
+* 如果在`go env` GOPROXY="https://goproxy.cn,direct"的情况下报：github.com/tdewolff/minify/v2@v2.11.9/js/js.go:741:28: decl.Definitions undefined 的错误提示，请到github.com官网手动下载该项目的tag文件，并覆盖go pkg/mod下的tdewolff/minify/v2@v2.11.9。可能的远因是goproxy.cn没有及时更新github的项目tag导致下载来的文件和github该tag的文件不一致。
