@@ -91,9 +91,9 @@
         if (row.classstatus == 1){
             htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'forbid\',' + row.classid + ')">禁用</button>';
         }else if(row.status == -1){
-            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'recycle\',' + row.classid + ')">恢复</button>';
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-warm" onclick="doAJAX(\'recycle\',' + row.classid + ')">恢复</button>';
         }else{
-            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'resume\',' + row.classid + ')">审核</button>';
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="doAJAX(\'resume\',' + row.classid + ')">审核</button>';
         }
         if (row.state =="open"){
             htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="forever_del(\'forever_del\',' + row.classid + ')">永久删除</button>';

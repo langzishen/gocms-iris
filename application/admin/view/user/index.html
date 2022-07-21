@@ -102,9 +102,9 @@
         if (row.status == 1){
             htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'forbid\',' + row.id + ')">禁用</button>';
         }else if(row.status == -1){
-            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'recycle\',' + row.id + ')">恢复</button>';
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-warm" onclick="doAJAX(\'recycle\',' + row.id + ')">恢复</button>';
         }else{
-            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="doAJAX(\'resume\',' + row.id + ')">审核</button>';
+            htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="doAJAX(\'resume\',' + row.id + ')">审核</button>';
         }
         htmlstr += '<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="resetpassword(\'' + row.id + '\')">重置密码</button>';
         return htmlstr;
