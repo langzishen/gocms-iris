@@ -1,8 +1,12 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
+	"go/importer"
 	"gocms/application/app_session"
+	"gocms/application/model"
+	"gocms/application/service"
 	"gocms/config"
 )
 
@@ -68,11 +72,33 @@ func (ic *IndexController) GetHome(ctx iris.Context) {
 	ctx.View("index/home.html")
 }
 
+func (ic *IndexController) GetIndex2(ctx iris.Context) {
+	pkg2, err2 := importer.Default().Import("github.com/kataras/iris")
+	fmt.Println(pkg2, err2)
+	pkg, err := importer.Default().Import("fmt")
+	fmt.Println(pkg, err)
+}
+
+func (ic *IndexController) GetIndex3(ctx iris.Context) {
+	list := []model.Article{}
+	where := make(map[string]map[string]interface{})
+	where["eq"] = map[string]interface{}{"id": 1}
+	where["gte"] = map[string]interface{}{"status": 0}
+	where["like"] = map[string]interface{}{"title": "%文章%"}
+	list_json, total_count := new(service.Base).List(&list, []string{"id", "title"}, where, "", 0, 10)
+	fmt.Println(total_count)
+	fmt.Println("--------------------------------------")
+	fmt.Println(list)
+	fmt.Println("++++++++++++++++++++++++++++++++++++")
+	fmt.Println(list_json)
+}
+
 func (ic *IndexController) GetLogout(ctx iris.Context) {
 	app_session.Sess.Start(ctx).Delete("authId")
 	/*
 		app_session.Sess.Start(ctx).Delete("email")
 		app_session.Sess.Start(ctx).Delete("loginUserName")
+
 		app_session.Sess.Start(ctx).Delete("type_id")
 		appconf := config.InitConfig()
 		app_session.Sess.Start(ctx).Delete(appconf.Rbac.AdminAuthKey)**/

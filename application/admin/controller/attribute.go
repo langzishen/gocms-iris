@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/kataras/iris/v12"
 	"gocms/application/model"
+	"gocms/application/service"
 	"gorm.io/gorm"
 	"strconv"
 )
@@ -21,11 +22,11 @@ func (ac *AttributeController) PostList(ctx iris.Context) {
 	list := []model.Attribute{}
 	var count int64
 	if ename == "" {
-		model.InitDB().Select([]string{"ANY_VALUE(id)", "model_ename", "ANY_VALUE(attrname)", "ANY_VALUE(attrvalue)", "ANY_VALUE(sort)", "ANY_VALUE(status)"}).Group("model_ename").Offset(limit_start).Limit(rows).Find(&list)
-		model.InitDB().Model(model.Attribute{}).Select([]string{"ANY_VALUE(id)", "model_ename", "ANY_VALUE(attrname)", "ANY_VALUE(attrvalue)", "ANY_VALUE(sort)", "ANY_VALUE(status)"}).Group("model_ename").Count(&count)
+		service.InitDB().Select([]string{"ANY_VALUE(id)", "model_ename", "ANY_VALUE(attrname)", "ANY_VALUE(attrvalue)", "ANY_VALUE(sort)", "ANY_VALUE(status)"}).Group("model_ename").Offset(limit_start).Limit(rows).Find(&list)
+		service.InitDB().Model(model.Attribute{}).Select([]string{"ANY_VALUE(id)", "model_ename", "ANY_VALUE(attrname)", "ANY_VALUE(attrvalue)", "ANY_VALUE(sort)", "ANY_VALUE(status)"}).Group("model_ename").Count(&count)
 	} else {
-		model.InitDB().Where(map[string]interface{}{"model_ename": ename}).Offset(limit_start).Limit(rows).Find(&list)
-		model.InitDB().Model(model.Attribute{}).Where(map[string]interface{}{"model_ename": ename}).Count(&count)
+		service.InitDB().Where(map[string]interface{}{"model_ename": ename}).Offset(limit_start).Limit(rows).Find(&list)
+		service.InitDB().Model(model.Attribute{}).Where(map[string]interface{}{"model_ename": ename}).Count(&count)
 	}
 	var pages int
 	if len(list)%rows == 0 {
@@ -38,7 +39,7 @@ func (ac *AttributeController) PostList(ctx iris.Context) {
 
 func (ac *AttributeController) GetAdd(ctx iris.Context) {
 	modelM := []model.Model{}
-	model.InitDB().Select([]string{"ename", "cname"}).Where(map[string]interface{}{"status": 1}).Find(&modelM)
+	service.InitDB().Select([]string{"ename", "cname"}).Where(map[string]interface{}{"status": 1}).Find(&modelM)
 	var model_list []map[string]interface{}
 	for key, vo := range modelM {
 		vo_map := make(map[string]interface{})
@@ -66,7 +67,7 @@ func (ac *AttributeController) PostAdd(ctx iris.Context) {
 	}
 	attributeM := model.Attribute{}
 
-	if model.InitDB().Where(map[string]interface{}{"model_ename": model_ename, "attrvalue": attrvalue}).Find(&attributeM); attributeM.Id != 0 {
+	if service.InitDB().Where(map[string]interface{}{"model_ename": model_ename, "attrvalue": attrvalue}).Find(&attributeM); attributeM.Id != 0 {
 		ac.TopjuiError(ctx, "该属性值已存在")
 	}
 
@@ -75,7 +76,7 @@ func (ac *AttributeController) PostAdd(ctx iris.Context) {
 	attributeM.Attrvalue = attrvalue
 	attributeM.Status = 1
 	attributeM.Sort = 99
-	res := model.InitDB().Create(&attributeM)
+	res := service.InitDB().Create(&attributeM)
 	if res.Error == nil {
 		ac.TopjuiSucess(ctx, "添加成功")
 	} else {
@@ -94,7 +95,7 @@ func (ac *AttributeController) PostEdit(ctx iris.Context) {
 	attributeM.Id = id
 	attributeM.Attrname = attrname
 	attributeM.Attrvalue = attrvalue
-	res := model.InitDB().Updates(&attributeM)
+	res := service.InitDB().Updates(&attributeM)
 	if res.Error == nil {
 		ac.TopjuiSucess(ctx, "编辑成功")
 	} else {
@@ -111,9 +112,9 @@ func (ac *AttributeController) PostForever_del(ctx iris.Context) {
 	attributeM := model.Attribute{}
 	var res *gorm.DB
 	if model_ename == "" {
-		res = model.InitDB().Where(map[string]interface{}{"id": id}).Delete(&attributeM)
+		res = service.InitDB().Where(map[string]interface{}{"id": id}).Delete(&attributeM)
 	} else {
-		res = model.InitDB().Where(map[string]interface{}{"model_ename": model_ename}).Delete(&attributeM)
+		res = service.InitDB().Where(map[string]interface{}{"model_ename": model_ename}).Delete(&attributeM)
 	}
 	if res.Error == nil {
 		ac.TopjuiSucess(ctx, "删除成功")

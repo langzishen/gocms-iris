@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/kataras/iris/v12"
 	"gocms/application/model"
+	"gocms/application/service"
 	"gocms/config"
 	"strconv"
 )
@@ -24,7 +25,7 @@ func (nc *NodeController) PostController_list(ctx iris.Context) {
 	}
 	var controller_menu []map[string]interface{}
 	node_list := []*model.Node{}
-	model.InitDB().Where("level=2 AND group_id=?", group_id).Order("sort").Find(&node_list)
+	service.InitDB().Where("level=2 AND group_id=?", group_id).Order("sort").Find(&node_list)
 	for _, node_vo := range node_list {
 		controller_menu = append(controller_menu, map[string]interface{}{"iconCls": "fa fa-" + node_vo.Icon, "name": node_vo.Name, "text": node_vo.Title, "status": node_vo.Status, "codeSetId": group_id, "resourceType": "menu", "levelId": 2, "id": int(node_vo.Id), "pid": int(node_vo.Pid), "state": "closed", "url": "", "textColour": ""})
 	}
@@ -39,7 +40,7 @@ func (nc *NodeController) PostAction_list(ctx iris.Context) {
 	}
 	var action_menu []map[string]interface{}
 	node_list := []*model.Node{}
-	model.InitDB().Where("level=3 AND pid=?", controller_id).Order("sort").Find(&node_list)
+	service.InitDB().Where("level=3 AND pid=?", controller_id).Order("sort").Find(&node_list)
 	for _, node_vo := range node_list {
 		action_menu = append(action_menu, map[string]interface{}{"iconCls": "fa fa-" + node_vo.Icon, "name": node_vo.Name, "text": node_vo.Title, "status": node_vo.Status, "codeSetId": group_id, "resourceType": "menu", "levelId": 2, "id": int(node_vo.Id), "pid": int(node_vo.Pid), "state": "closed", "url": "", "textColour": ""})
 	}
@@ -98,7 +99,7 @@ func (nc *NodeController) PostController_add(ctx iris.Context) {
 	post_data_byte, _ := json.Marshal(post_data)
 	nodeM := model.Node{}
 	json.Unmarshal(post_data_byte, &nodeM)
-	model.InitDB().Create(&nodeM)
+	service.InitDB().Create(&nodeM)
 	if nodeM.Id > 0 {
 		nc.TopjuiSucess(ctx, "添加成功")
 	} else {
@@ -116,10 +117,10 @@ func (nc *NodeController) GetController_edit(ctx iris.Context) {
 	}
 	nodeM := model.Node{}
 	id_i, _ := strconv.Atoi(id)
-	model.InitDB().Where(map[string]interface{}{"id": id_i}).Last(&nodeM)
+	service.InitDB().Where(map[string]interface{}{"id": id_i}).Last(&nodeM)
 	ctx.ViewData("info", nodeM)
 	node_upM := model.Node{}
-	model.InitDB().Where(map[string]interface{}{"id": nodeM.Pid}).Last(&node_upM)
+	service.InitDB().Where(map[string]interface{}{"id": nodeM.Pid}).Last(&node_upM)
 	ctx.ViewData("up_info", node_upM)
 	ctx.View(RequestController + "/controller_edit.html")
 }
@@ -148,7 +149,7 @@ func (nc *NodeController) PostController_edit(ctx iris.Context) {
 	post_data_byte, _ := json.Marshal(post_data)
 	nodeM := model.Node{}
 	json.Unmarshal(post_data_byte, &nodeM)
-	res := model.InitDB().Save(&nodeM)
+	res := service.InitDB().Save(&nodeM)
 	if res.Error == nil {
 		nc.TopjuiSucess(ctx, "保存成功")
 	} else {
@@ -162,7 +163,7 @@ func (nc *NodeController) GetAction_add(ctx iris.Context) {
 	ctx.ViewData("p_id", p_id_i)
 
 	nodeM := model.Node{}
-	model.InitDB().Where(map[string]interface{}{"id": p_id_i}).Last(&nodeM)
+	service.InitDB().Where(map[string]interface{}{"id": p_id_i}).Last(&nodeM)
 	ctx.ViewData("p_title", nodeM.Title)
 
 	ctx.View(RequestController + "/action_add.html")
@@ -185,7 +186,7 @@ func (nc *NodeController) PostAction_add(ctx iris.Context) {
 	post_data_byte, _ := json.Marshal(post_data)
 	nodeM := model.Node{}
 	json.Unmarshal(post_data_byte, &nodeM)
-	model.InitDB().Create(&nodeM)
+	service.InitDB().Create(&nodeM)
 	if nodeM.Id > 0 {
 		nc.TopjuiSucess(ctx, "添加成功")
 	} else {
@@ -203,10 +204,10 @@ func (nc *NodeController) GetAction_edit(ctx iris.Context) {
 	}
 	nodeM := model.Node{}
 	id_i, _ := strconv.Atoi(id)
-	model.InitDB().Where(map[string]interface{}{"id": id_i}).Last(&nodeM)
+	service.InitDB().Where(map[string]interface{}{"id": id_i}).Last(&nodeM)
 	ctx.ViewData("info", nodeM)
 	node_upM := model.Node{}
-	model.InitDB().Where(map[string]interface{}{"id": nodeM.Pid}).Last(&node_upM)
+	service.InitDB().Where(map[string]interface{}{"id": nodeM.Pid}).Last(&node_upM)
 	ctx.ViewData("up_info", node_upM)
 	ctx.View(RequestController + "/action_edit.html")
 }
@@ -235,7 +236,7 @@ func (nc *NodeController) PostAction_edit(ctx iris.Context) {
 	post_data_byte, _ := json.Marshal(post_data)
 	nodeM := model.Node{}
 	json.Unmarshal(post_data_byte, &nodeM)
-	res := model.InitDB().Save(&nodeM)
+	res := service.InitDB().Save(&nodeM)
 	if res.Error == nil {
 		nc.TopjuiSucess(ctx, "保存成功")
 	} else {

@@ -7,6 +7,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"gocms/application/app_session"
 	"gocms/application/model"
+	"gocms/application/service"
 	"gocms/config"
 	"strconv"
 	"strings"
@@ -111,7 +112,7 @@ func (r *RBAC) Init(NodeTable, RoleTable, RoleUserTable, UserTable, AccessTable 
 func (r *RBAC) Authenticate(whereMap map[string]interface{}) (bool, model.User) {
 	var user model.User
 	whereMap["status"] = 1
-	model.InitDB().Where(whereMap).Last(&user)
+	service.InitDB().Where(whereMap).Last(&user)
 	if user.Id > 0 {
 		return true, user
 	}
@@ -209,21 +210,21 @@ func (r *RBAC) GetAccessMap(authId uint) map[string]map[string]map[string]string
 	r2 := r.Init(app_conf.Rbac.TableNode, app_conf.Rbac.TableRole, app_conf.Rbac.TableRoleUser, app_conf.Rbac.TableUser, app_conf.Rbac.TableAccess)
 	sql := "select node.id,node.name from " + r2.RoleTable + " as role," + r2.RoleUserTable + " as user," + r2.AccessTable + " as access ," + r2.NodeTable + " as node " + "where user.user_id='" + strconv.Itoa(int(authId)) + "' and user.role_id=role.id and ( access.role_id=role.id  or (access.role_id=role.pid and role.pid!=0 ) ) and role.status=1 and access.node_id=node.id and node.level=1 and node.status=1"
 	apps := []*nodeAccess{}
-	model.InitDB().Raw(sql).Scan(&apps)
+	service.InitDB().Raw(sql).Scan(&apps)
 	access := make(map[string]map[string]map[string]string)
 	for _, app := range apps {
 		appId := app.Id
 		appName := app.Name
 		sql = "select node.id,node.name from " + r2.RoleTable + " as role," + r2.RoleUserTable + " as user," + r2.AccessTable + " as access ," + r2.NodeTable + " as node " + "where user.user_id='" + strconv.Itoa(int(authId)) + "' and user.role_id=role.id and ( access.role_id=role.id  or (access.role_id=role.pid and role.pid!=0 ) ) and role.status=1 and access.node_id=node.id and node.level=2 and node.pid=" + strconv.Itoa(int(appId)) + " and node.status=1"
 		modules := []*nodeAccess{}
-		model.InitDB().Raw(sql).Scan(&modules)
+		service.InitDB().Raw(sql).Scan(&modules)
 		moduleMap := make(map[string]map[string]string)
 		for _, module := range modules {
 			moduleId := module.Id
 			moduleName := module.Name
 			sql = "select node.id,node.name from " + r2.RoleTable + " as role," + r2.RoleUserTable + " as user," + r2.AccessTable + " as access ," + r2.NodeTable + " as node " + "where user.user_id='" + strconv.Itoa(int(authId)) + "' and user.role_id=role.id and ( access.role_id=role.id  or (access.role_id=role.pid and role.pid!=0 ) ) and role.status=1 and access.node_id=node.id and node.level=3 and node.pid=" + strconv.Itoa(int(moduleId)) + " and node.status=1"
 			actions := []*nodeAccess{}
-			model.InitDB().Raw(sql).Scan(&actions)
+			service.InitDB().Raw(sql).Scan(&actions)
 			actionMap := make(map[string]string)
 			for _, action := range actions {
 				actionId := action.Id
@@ -251,5 +252,5 @@ func (r *RBAC) GetModuleAccessList(authId uint, module string) {
 	r2 := r.Init(app_conf.Rbac.TableNode, app_conf.Rbac.TableRole, app_conf.Rbac.TableRoleUser, app_conf.Rbac.TableUser, app_conf.Rbac.TableAccess)
 	sql := "select access.node_id from " + r2.RoleTable + " as role," + r2.RoleUserTable + " as user," + r2.AccessTable + " as access where user.user_id='" + strconv.Itoa(int(authId)) + "' and user.role_id=role.id and ( access.role_id=role.id  or (access.role_id=role.pid and role.pid!=0 ) ) and role.status=1 and  access.module='" + module + "'"
 	aa := []interface{}{}
-	model.InitDB().Raw(sql).Scan(&aa)
+	service.InitDB().Raw(sql).Scan(&aa)
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/kataras/iris/v12"
 	"gocms/application/model"
+	"gocms/application/service"
 	"strconv"
 )
 
@@ -29,15 +30,15 @@ func (pc *PhotoController) PostList(ctx iris.Context) {
 
 	list := []photoM{}
 	if search != "" {
-		model.InitDB().Where(search_str).Offset(limit_start).Limit(rows).Find(&list)
+		service.InitDB().Where(search_str).Offset(limit_start).Limit(rows).Find(&list)
 	} else {
-		model.InitDB().Offset(limit_start).Limit(rows).Find(&list)
+		service.InitDB().Offset(limit_start).Limit(rows).Find(&list)
 	}
 	var count int64
 	if search != "" {
-		model.InitDB().Model(model.Photo{}).Where(search_str).Count(&count)
+		service.InitDB().Model(model.Photo{}).Where(search_str).Count(&count)
 	} else {
-		model.InitDB().Model(model.Photo{}).Count(&count)
+		service.InitDB().Model(model.Photo{}).Count(&count)
 	}
 	var pages int
 	if len(list)%rows == 0 {
@@ -50,12 +51,12 @@ func (pc *PhotoController) PostList(ctx iris.Context) {
 	for i, vo := range list {
 		if vo.Tid != "" {
 			categoryM := model.Category{}
-			model.InitDB().Model(categoryM).Where(map[string]interface{}{"classid": vo.Tid}).Find(&categoryM)
+			service.InitDB().Model(categoryM).Where(map[string]interface{}{"classid": vo.Tid}).Find(&categoryM)
 			//vo.TTitle = categoryM.Classtitle
 			//使用(&list[i])不用引入第三方变量
 			(&list[i]).TTitle = categoryM.Classtitle
 			userM := model.User{}
-			model.InitDB().Model(userM).Where(map[string]interface{}{"id": vo.CreaterId}).Find(&userM)
+			service.InitDB().Model(userM).Where(map[string]interface{}{"id": vo.CreaterId}).Find(&userM)
 			(&list[i]).Creater = userM.Nickname
 		}
 		//list2 = append(list2, vo)
@@ -66,7 +67,7 @@ func (pc *PhotoController) PostList(ctx iris.Context) {
 
 func (pc *PhotoController) PostZree(ctx iris.Context) {
 	classpid, _ := strconv.Atoi(ctx.URLParam("classpid"))
-	category_lst := new(model.Category).ZreeList("1", classpid, map[string]interface{}{"classmodule": "photo"})
+	category_lst := new(service.Category).ZreeList("1", classpid, map[string]interface{}{"classmodule": "photo"})
 	ctx.JSON(category_lst)
 }
 
@@ -77,7 +78,7 @@ func (pc *PhotoController) PostAdd(ctx iris.Context) {
 	photoM.Img = ctx.PostValue("img")
 	photoM.CreaterId = uint(AuthId)
 	photoM.Status, _ = strconv.Atoi(ctx.PostValue("status"))
-	res := model.InitDB().Create(&photoM)
+	res := service.InitDB().Create(&photoM)
 	if res.Error != nil {
 		pc.TopjuiError(ctx, res.Error.Error())
 	} else {
@@ -91,7 +92,7 @@ func (pc *PhotoController) GetEdit(ctx iris.Context) {
 		pc.TopjuiError(ctx, "参数Id丢失")
 	}
 	photoM := model.Photo{}
-	model.InitDB().Where(map[string]interface{}{"id": id}).Find(&photoM)
+	service.InitDB().Where(map[string]interface{}{"id": id}).Find(&photoM)
 
 	ctx.ViewData("info", photoM)
 	pc.BaseController.GetEdit(ctx)
@@ -107,7 +108,7 @@ func (pc *PhotoController) PostEdit(ctx iris.Context) {
 	photoM.Title = ctx.PostValue("title")
 	photoM.Img = ctx.PostValue("img")
 	photoM.Status, _ = strconv.Atoi(ctx.PostValue("status"))
-	res := model.InitDB().Where(map[string]interface{}{"id": id}).Updates(&photoM)
+	res := service.InitDB().Where(map[string]interface{}{"id": id}).Updates(&photoM)
 	if res.Error != nil {
 		pc.TopjuiError(ctx, res.Error.Error())
 	} else {

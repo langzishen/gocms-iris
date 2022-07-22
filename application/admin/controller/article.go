@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/kataras/iris/v12"
 	"gocms/application/model"
+	"gocms/application/service"
 	"strconv"
 	"strings"
 )
@@ -31,16 +32,16 @@ func (ac *ArticleController) PostList(ctx iris.Context) {
 
 	list := []articleM{}
 	if search != "" {
-		model.InitDB().Where(search_str).Offset(limit_start).Limit(rows).Find(&list)
+		service.InitDB().Where(search_str).Offset(limit_start).Limit(rows).Find(&list)
 	} else {
 
-		model.InitDB().Offset(limit_start).Limit(rows).Find(&list)
+		service.InitDB().Offset(limit_start).Limit(rows).Find(&list)
 	}
 	var count int64
 	if search != "" {
-		model.InitDB().Model(model.Article{}).Where(search_str).Count(&count)
+		service.InitDB().Model(model.Article{}).Where(search_str).Count(&count)
 	} else {
-		model.InitDB().Model(model.Article{}).Count(&count)
+		service.InitDB().Model(model.Article{}).Count(&count)
 	}
 	var pages int
 	if len(list)%rows == 0 {
@@ -53,12 +54,12 @@ func (ac *ArticleController) PostList(ctx iris.Context) {
 	for i, vo := range list {
 		if vo.Tid != "" {
 			categoryM := model.Category{}
-			model.InitDB().Model(categoryM).Where(map[string]interface{}{"classid": vo.Tid}).Find(&categoryM)
+			service.InitDB().Model(categoryM).Where(map[string]interface{}{"classid": vo.Tid}).Find(&categoryM)
 			//vo.TTitle = categoryM.Classtitle
 			//使用(&list[i])不用引入第三方变量
 			(&list[i]).TTitle = categoryM.Classtitle
 			userM := model.User{}
-			model.InitDB().Model(userM).Where(map[string]interface{}{"id": vo.CreaterId}).Find(&userM)
+			service.InitDB().Model(userM).Where(map[string]interface{}{"id": vo.CreaterId}).Find(&userM)
 			(&list[i]).Creater = userM.Nickname
 		}
 		//list2 = append(list2, vo)
@@ -68,14 +69,14 @@ func (ac *ArticleController) PostList(ctx iris.Context) {
 }
 
 func (ac *ArticleController) GetAdd(ctx iris.Context) {
-	attrlist := new(model.Attribute).GetList(map[string]interface{}{"model_ename": "article"})
+	attrlist := new(service.Attribute).GetList(map[string]interface{}{"model_ename": "article"})
 	ctx.ViewData("attrlist", attrlist)
 	ac.BaseController.GetAdd(ctx)
 }
 
 func (ac *ArticleController) PostZree(ctx iris.Context) {
 	classpid, _ := strconv.Atoi(ctx.URLParam("classpid"))
-	category_lst := new(model.Category).ZreeList("1", classpid, map[string]interface{}{"classmodule": "article"})
+	category_lst := new(service.Category).ZreeList("1", classpid, map[string]interface{}{"classmodule": "article"})
 	ctx.JSON(category_lst)
 }
 
@@ -95,7 +96,7 @@ func (ac *ArticleController) PostAdd(ctx iris.Context) {
 	articleM.Attrtj = strings.Join(Attrtj_str, ",")
 	IsLoginShow, _ := strconv.Atoi(ctx.PostValue("is_login_show"))
 	articleM.IsLoginShow = uint(IsLoginShow)
-	res := model.InitDB().Create(&articleM)
+	res := service.InitDB().Create(&articleM)
 	if res.Error != nil {
 		ac.TopjuiError(ctx, res.Error.Error())
 	} else {
@@ -109,10 +110,10 @@ func (ac *ArticleController) GetEdit(ctx iris.Context) {
 		ac.TopjuiError(ctx, "参数Id丢失")
 	}
 	articleM := model.Article{}
-	model.InitDB().Where(map[string]interface{}{"id": id}).Find(&articleM)
+	service.InitDB().Where(map[string]interface{}{"id": id}).Find(&articleM)
 
 	attrtj := strings.Split(articleM.Attrtj, ",")
-	attrlist := new(model.Attribute).GetList(map[string]interface{}{"model_ename": "article"})
+	attrlist := new(service.Attribute).GetList(map[string]interface{}{"model_ename": "article"})
 	var attrlist2 []map[string]interface{}
 	if len(attrlist) > 0 {
 		for _, vo := range attrlist {
@@ -147,7 +148,7 @@ func (ac *ArticleController) PostEdit(ctx iris.Context) {
 	articleM.Attrtj = strings.Join(Attrtj_str, ",")
 	IsLoginShow, _ := strconv.Atoi(ctx.PostValue("is_login_show"))
 	articleM.IsLoginShow = uint(IsLoginShow)
-	res := model.InitDB().Where(map[string]interface{}{"id": id}).Updates(&articleM)
+	res := service.InitDB().Where(map[string]interface{}{"id": id}).Updates(&articleM)
 	if res.Error != nil {
 		ac.TopjuiError(ctx, res.Error.Error())
 	} else {

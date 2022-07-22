@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/kataras/iris/v12"
 	"gocms/application/model"
+	"gocms/application/service"
 	"strconv"
 	"strings"
 )
@@ -14,12 +15,12 @@ type CategoryController struct {
 
 func (cc *CategoryController) PostList(ctx iris.Context) {
 	classpid, _ := strconv.Atoi(ctx.URLParam("classpid"))
-	category_lst := new(model.Category).ZreeList("*", classpid)
+	category_lst := new(service.Category).ZreeList("*", classpid)
 	ctx.JSON(category_lst)
 }
 
 func (cc *CategoryController) GetAdd(ctx iris.Context) {
-	model_M := new(model.Model).GetModelList()
+	model_M := new(service.Model).GetModelList()
 	var model_list []map[string]interface{}
 	for _, model_vo := range model_M {
 		model_list = append(model_list, map[string]interface{}{"text": model_vo.Cname, "value": model_vo.Ename})
@@ -32,7 +33,7 @@ func (cc *CategoryController) GetAdd(ctx iris.Context) {
 func (cc *CategoryController) PostZree(ctx iris.Context) {
 	classpid, _ := strconv.Atoi(ctx.URLParam("classpid"))
 	category_lst_first := []map[string]interface{}{{"classid": 0, "classtitle": "顶级分类", "state": "open"}}
-	category_lst := new(model.Category).ZreeList("*", classpid)
+	category_lst := new(service.Category).ZreeList("*", classpid)
 	if classpid == 0 {
 		category_lst = append(category_lst_first, category_lst...)
 	}
@@ -52,7 +53,7 @@ func (cc *CategoryController) PostAdd(ctx iris.Context) {
 	categoryM.Classimg = ctx.PostValue("classimg")
 	categoryM.Classapv = 0
 	categoryM.Classmenushow, _ = strconv.Atoi(ctx.PostValue("classmenushow"))
-	model.InitDB().Create(&categoryM)
+	service.InitDB().Create(&categoryM)
 	/**
 	if categoryM.Classpid != 0 {
 		model.InitDB().Model(model.Category{}).Where(map[string]interface{}{"classid": categoryM.Classpid}).Update("classchild", 1)
@@ -66,8 +67,8 @@ func (cc *CategoryController) GetEdit(ctx iris.Context) {
 		cc.TopjuiError(ctx, "参数Id丢失")
 	}
 	categoryM := model.Category{}
-	model.InitDB().Where(map[string]interface{}{"classid": classid}).Find(&categoryM)
-	model_M := new(model.Model).GetModelList()
+	service.InitDB().Where(map[string]interface{}{"classid": classid}).Find(&categoryM)
+	model_M := new(service.Model).GetModelList()
 	var model_list []map[string]interface{}
 	for _, model_vo := range model_M {
 		if model_vo.Ename == categoryM.Classmodule {
@@ -96,7 +97,7 @@ func (cc *CategoryController) PostEdit(ctx iris.Context) {
 	categoryM.Classmodule = ctx.PostValue("classmodule")
 	categoryM.Classimg = ctx.PostValue("classimg")
 	categoryM.Classmenushow, _ = strconv.Atoi(ctx.PostValue("classmenushow"))
-	res := model.InitDB().Where(map[string]interface{}{"classid": classid}).Updates(categoryM)
+	res := service.InitDB().Where(map[string]interface{}{"classid": classid}).Updates(categoryM)
 	if res.Error != nil {
 		cc.TopjuiError(ctx, res.Error.Error())
 	}
@@ -132,7 +133,7 @@ func (cc *CategoryController) PostForever_del(ctx iris.Context) {
 		id_i, _ := strconv.Atoi(id_str)
 		id_arr = append(id_arr, id_i)
 	}
-	res := model.InitDB().Debug().Exec("DELETE from "+RequestController+" WHERE classid IN ?", id_arr)
+	res := service.InitDB().Debug().Exec("DELETE from "+RequestController+" WHERE classid IN ?", id_arr)
 	if res.Error == nil {
 		cc.TopjuiSucess(ctx, "删除成功")
 	} else {
@@ -167,7 +168,7 @@ func (cc *CategoryController) AjaxDone(ctx iris.Context, do string) {
 		id_arr = append(id_arr, id_i)
 	}
 
-	res := model.InitDB().Exec("UPDATE "+RequestController+" SET classstatus="+strconv.Itoa(status)+" WHERE classid IN ?", id_arr)
+	res := service.InitDB().Exec("UPDATE "+RequestController+" SET classstatus="+strconv.Itoa(status)+" WHERE classid IN ?", id_arr)
 	if res.Error == nil {
 		cc.TopjuiSucess(ctx, say+"成功")
 	} else {

@@ -6,6 +6,7 @@ import (
 	"gocms/application/app_session"
 	"gocms/application/extend/upload"
 	"gocms/application/model"
+	"gocms/application/service"
 	"gocms/config"
 	"strconv"
 	"strings"
@@ -67,7 +68,7 @@ func DataAccess(ctx iris.Context) (tids []int) {
 
 				role_userM := []model.RoleUser{}
 				role_id_s := []int{}
-				model.InitDB().Where(map[string]interface{}{"user_id": AuthId}).Find(&role_userM)
+				service.InitDB().Where(map[string]interface{}{"user_id": AuthId}).Find(&role_userM)
 				if len(role_userM) > 0 {
 					for _, role_user_v := range role_userM {
 						role_id_s = append(role_id_s, int(role_user_v.RoleId))
@@ -85,7 +86,7 @@ func DataAccess(ctx iris.Context) (tids []int) {
 					data_access_map["node_id"] = ctx.PostValue("node_id")
 				}
 				data_accessM := []model.DataAccess{}
-				model.InitDB().Where(data_access_map).Find(&data_accessM)
+				service.InitDB().Where(data_access_map).Find(&data_accessM)
 				if len(data_accessM) > 0 {
 					for _, data_access_v := range data_accessM {
 						tids = append(tids, int(data_access_v.Tid))
@@ -152,10 +153,10 @@ func (bc *BaseController) LeftMenu(ctx iris.Context) []map[string]interface{} {
 	top_menu_item := ctx.URLParam("menu_id")
 	node_list := []*model.Node{}
 	var left_menu []map[string]interface{}
-	model.InitDB().Where("level=2 AND status=1 and group_id=?", top_menu_item).Order("sort").Find(&node_list)
+	service.InitDB().Where("level=2 AND status=1 and group_id=?", top_menu_item).Order("sort").Find(&node_list)
 	for _, node_vo := range node_list {
 		node_list2 := []*model.Node{}
-		model.InitDB().Where("level=3 AND status=1 AND left_menu_action=1 and pid=?", node_vo.Id).Order("sort").Find(&node_list2)
+		service.InitDB().Where("level=3 AND status=1 AND left_menu_action=1 and pid=?", node_vo.Id).Order("sort").Find(&node_list2)
 		i := 0
 		for _, node_vo2 := range node_list2 {
 			if new(rbac.RBAC).AccessDecision(RequestApp, node_vo.Name, node_vo2.Name, ctx) {
@@ -194,10 +195,10 @@ func (bc *BaseController) PostSearchleftmenu(ctx iris.Context) {
 	}
 	node_list := []*model.Node{}
 	var left_menu []map[string]interface{}
-	model.InitDB().Where("level=2 AND status=1").Order("sort").Find(&node_list)
+	service.InitDB().Where("level=2 AND status=1").Order("sort").Find(&node_list)
 	for _, node_vo := range node_list {
 		node_list2 := []*model.Node{}
-		model.InitDB().Debug().Where("level=3 AND status=1 AND left_menu_action=1 and pid=? AND title like '%"+search+"%'", node_vo.Id).Order("sort").Find(&node_list2)
+		service.InitDB().Debug().Where("level=3 AND status=1 AND left_menu_action=1 and pid=? AND title like '%"+search+"%'", node_vo.Id).Order("sort").Find(&node_list2)
 		for _, node_vo2 := range node_list2 {
 			if new(rbac.RBAC).AccessDecision(RequestApp, node_vo.Name, node_vo2.Name, ctx) {
 				left_menu = append(left_menu, map[string]interface{}{"text": node_vo2.Title, "url": "/" + RequestApp + "/" + node_vo.Name + "/" + node_vo2.Name})
@@ -258,7 +259,7 @@ func (bc *BaseController) PostForever_del(ctx iris.Context) {
 		id_i, _ := strconv.Atoi(id_str)
 		id_arr = append(id_arr, id_i)
 	}
-	res := model.InitDB().Exec("DELETE FROM `"+RequestController+"` WHERE id IN ?", id_arr)
+	res := service.InitDB().Exec("DELETE FROM `"+RequestController+"` WHERE id IN ?", id_arr)
 	if res.Error == nil {
 		bc.TopjuiSucess(ctx, "删除成功")
 	} else {
@@ -296,7 +297,7 @@ func (bc *BaseController) AjaxDone(ctx iris.Context, do string) {
 		id_arr = append(id_arr, id_i)
 	}
 
-	res := model.InitDB().Exec("UPDATE `"+RequestController+"` SET status="+strconv.Itoa(status)+" WHERE id IN ?", id_arr)
+	res := service.InitDB().Exec("UPDATE `"+RequestController+"` SET status="+strconv.Itoa(status)+" WHERE id IN ?", id_arr)
 	if res.Error == nil {
 		bc.TopjuiSucess(ctx, say+"成功")
 	} else {
@@ -306,11 +307,11 @@ func (bc *BaseController) AjaxDone(ctx iris.Context, do string) {
 
 func (bc *BaseController) GetMenu_zree(ctx iris.Context) {
 	node_list := []*model.Node{}
-	model.InitDB().Where("level=3 AND status=1 and pid=?", ctx.URLParam("pid")).Order("sort").Find(&node_list)
+	service.InitDB().Where("level=3 AND status=1 and pid=?", ctx.URLParam("pid")).Order("sort").Find(&node_list)
 	nodeZree_list := []map[string]interface{}{}
 	for _, v := range node_list {
 		node := model.Node{}
-		model.InitDB().Where("id=?", v.Pid).First(&node)
+		service.InitDB().Where("id=?", v.Pid).First(&node)
 		nodeZree_list = append(nodeZree_list, map[string]interface{}{
 			"id":      v.Id,
 			"pid":     v.Pid,

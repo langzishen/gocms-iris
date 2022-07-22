@@ -8,6 +8,7 @@ import (
 	"gocms/application/app_session"
 	"gocms/application/extend/captcha"
 	"gocms/application/model"
+	"gocms/application/service"
 	"gocms/config"
 	"strings"
 )
@@ -98,5 +99,5 @@ func (pc *PublicController) saveLoginSession(ctx iris.Context, userInfo model.Us
  * 保存后台的登录信息
  */
 func (pc *PublicController) setLoginLog(appName string, authId uint) {
-	new(model.LogLogin).AddLogLogin(appName, authId)
+	new(service.LogLogin).AddLogLogin(appName, authId)
 }
